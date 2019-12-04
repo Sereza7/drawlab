@@ -4,6 +4,7 @@ public class MainEditeurClient {
 
 	// main permettant de lancer un éditeur local 
 	public static void main (String [] args) {
+		System.setProperty("java.net.preferIPv4Stack", "true");
 		// le nom de la machine qui héberge le serveur distant
 		String serverHostName = "localhost" ;
 		// le numro de port sur lequel est déclaré le serveur distant
