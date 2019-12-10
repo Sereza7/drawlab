@@ -9,6 +9,7 @@ import java.net.InetAddress ;
 import java.rmi.RemoteException;
 import java.util.HashMap ;
 
+import main.PageAuthentification;
 import main.ZoneDeDessin;
 
 //---------------------------------------------------------------------
@@ -90,14 +91,39 @@ public class RecepteurUnicast extends Thread implements Runnable {
 			} else if (command.equals("ZOrder")) {
 				clientLocal.objectUpdateZOrder(name, (int)hm.get("z"));
 			}
-			else if (command.equals("Supprimer")) {
+			else if (command.equals("SupprimerDessin")) {
 				try {
 					clientLocal.supprimerDessin(name);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
 			}
+			else if (command.equals ("Profil")) {
+				/*try {
+					profilLocal.ajouterProfil (name, (int)hm.get ("x"), (int)hm.get ("y"), (int)hm.get ("w"), (int)hm.get ("h"));
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}*/
+			} else if (command.equals("Classement")) {
+				/*
+				profilLocal.profilUpdateClassement(name, (int)hm.get("classement"));
+				*/
+			}
+			else if (command.equals("SupprimerProfil")) {
+				/*
+				try {
+					profilLocal.supprimerProfil(name);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+				*/
+			}
 		}
+	}
+
+	public void setProfilLocal(PageAuthentification pageAuthentification) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
