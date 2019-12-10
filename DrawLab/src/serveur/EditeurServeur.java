@@ -42,7 +42,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	private HashMap<String, RemoteDessinServeur> sharedDessins = new HashMap<String, RemoteDessinServeur> () ;
 
 	// une strutcure pour stocker tous les profils et y accéder facilement 
-	private HashMap<String, ProfilServeur> sharedProfils;
+	private HashMap<String, ProfilServeur> sharedProfils = new HashMap<String, ProfilServeur> () ;
 
 	// le constructeur du serveur : il le déclare sur un port rmi de la machine d'exécution
 	protected EditeurServeur (String nomServeur, String nomMachineServeur, int portRMIServeur,	int portEmissionUpdate) throws RemoteException {

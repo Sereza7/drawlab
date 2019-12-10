@@ -9,7 +9,7 @@ import java.net.InetAddress ;
 import java.rmi.RemoteException;
 import java.util.HashMap ;
 
-import main.PageAuthentification;
+import login.Login;
 import main.ZoneDeDessin;
 
 //---------------------------------------------------------------------
@@ -121,7 +121,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 		}
 	}
 
-	public void setProfilLocal(PageAuthentification pageAuthentification) {
+	public void setProfilLocal(Login login) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -328,22 +328,6 @@ public abstract class Dessin extends JPanel{
 					
 				//switch to understand what corner coordinates to keep
 				startClick=e.getPoint();
-				if(startClick.x<pixelSize && startClick.y<pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x +drawObject.getWidth(),
-															drawObject.getLocation().y+drawObject.getHeight()	);
-				}
-				if (startClick.x>getWidth()-pixelSize && startClick.y<pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x,
-															drawObject.getLocation().y+drawObject.getHeight()	);
-				}
-				if (startClick.x<pixelSize && startClick.y>getHeight()-pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x+drawObject.getWidth(),
-															drawObject.getLocation().y	);
-				}
-				if (startClick.x>getWidth()-pixelSize && startClick.y>getHeight()-pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x,
-															drawObject.getLocation().y	);
-				}
 				setClickX(e.getX());
 				setClickY(e.getY());
 				setDeltaX(getWidth()-e.getX());
@@ -381,6 +365,7 @@ public abstract class Dessin extends JPanel{
 			
 		}
 
+		
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			
@@ -388,7 +373,22 @@ public abstract class Dessin extends JPanel{
 		
 	}
 	
-	
+	private void setClickY(int y) {
+		// TODO Auto-generated method stub
+		startClick.y=y;
+	}
+	private void setClickX(int x) {
+		// TODO Auto-generated method stub
+		startClick.x=x;
+	}
+	private int getClickX() {
+		// TODO Auto-generated method stub
+		return ((int)startClick.getX());
+	}
+	private int getClickY() {
+		// TODO Auto-generated method stub
+		return ((int)startClick.getY());
+	}
 	
 	private class DisplacementListener implements MouseMotionListener{
 
@@ -427,6 +427,8 @@ public abstract class Dessin extends JPanel{
 			}
 			
 		}
+
+		
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
