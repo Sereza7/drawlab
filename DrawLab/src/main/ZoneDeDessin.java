@@ -69,7 +69,7 @@ public class ZoneDeDessin extends JPanel{
 	// - mais elle va permettre d'accéder plus rapidement à un Dessin à partir de son nom
 	private HashMap<String, Dessin> dessins = new HashMap<String, Dessin> () ;
 	
-	ZoneDeDessin(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort){
+	public ZoneDeDessin(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort){
 		super();
 		try {
 			// tentative de connexion au serveur distant

@@ -1,5 +1,7 @@
 package main ;
 
+import editeurs.Editeur;
+
 public class MainEditeurClient {
 
 	// main permettant de lancer un éditeur local 

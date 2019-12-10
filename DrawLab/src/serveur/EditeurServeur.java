@@ -56,6 +56,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 			Naming.rebind ("//" + nomMachineServeur + ":" + portRMIServeur + "/" + nomServeur, this) ;
 			System.out.println ("pret pour le service") ;
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println ("pb RMICentralManager") ;
 		}
 	}
