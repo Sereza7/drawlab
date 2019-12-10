@@ -3,10 +3,13 @@ package login;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -44,6 +47,18 @@ public class Login extends JFrame {
 		passwordLabel.setFont(fontLabel);
 		panel.add(passwordLabel);
 		JTextField username = new JTextField();
+		username.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {				
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (username.getText().length() == 0 || username.getText().equals(" ")) {
+					JOptionPane.showMessageDialog(username, "Cannot leave username empty");
+				}
+			}
+		});
 		username.setBounds(511, 325, 250, 40);
 		panel.add(username);
 		JPasswordField password = new JPasswordField();
