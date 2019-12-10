@@ -105,7 +105,7 @@ public class DessinServeur extends UnicastRemoteObject implements RemoteDessinSe
 	public void supprimer() throws RemoteException {
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		for (EmetteurUnicast sender : emetteurs) {
-			sender.diffuseMessage ("SupprimerDessin", getName (), hm) ;
+			sender.diffuseMessage ("Supprimer", getName (), hm) ;
 		}
 		
 	}

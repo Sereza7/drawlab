@@ -3,7 +3,6 @@ package main;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -24,7 +23,8 @@ public abstract class Dessin extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 	protected boolean isSelected=false;
-	private Point startClick;
+	private int clickX;
+	private int clickY;
 	private int initialMouseX;
 	private int initialMouseY;
 	private int deltaX;
@@ -75,11 +75,38 @@ public abstract class Dessin extends JPanel{
 		return this.proxy;
 	}
 	
-	public Point getStartClick() {
-		return this.startClick;
+	/**
+	 * @return the clickX
+	 */
+	public int getClickX() {
+		return clickX;
 	}
-	public void setStartClick(Point startClick) {
-		this.startClick=startClick;
+
+
+
+	/**
+	 * @param clickX the clickX to set
+	 */
+	public void setClickX(int clickX) {
+		this.clickX = clickX;
+	}
+
+
+
+	/**
+	 * @return the clickY
+	 */
+	public int getClickY() {
+		return clickY;
+	}
+
+
+
+	/**
+	 * @param clickY the clickY to set
+	 */
+	public void setClickY(int clickY) {
+		this.clickY = clickY;
 	}
 	
 	
@@ -325,25 +352,6 @@ public abstract class Dessin extends JPanel{
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if(isSelected) {
-					
-				//switch to understand what corner coordinates to keep
-				startClick=e.getPoint();
-				if(startClick.x<pixelSize && startClick.y<pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x +drawObject.getWidth(),
-															drawObject.getLocation().y+drawObject.getHeight()	);
-				}
-				if (startClick.x>getWidth()-pixelSize && startClick.y<pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x,
-															drawObject.getLocation().y+drawObject.getHeight()	);
-				}
-				if (startClick.x<pixelSize && startClick.y>getHeight()-pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x+drawObject.getWidth(),
-															drawObject.getLocation().y	);
-				}
-				if (startClick.x>getWidth()-pixelSize && startClick.y>getHeight()-pixelSize) {
-					anchorPoint=new Point(drawObject.getLocation().x,
-															drawObject.getLocation().y	);
-				}
 				setClickX(e.getX());
 				setClickY(e.getY());
 				setDeltaX(getWidth()-e.getX());
