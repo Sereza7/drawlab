@@ -7,8 +7,9 @@ public class EditeurParent extends Editeur {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public EditeurParent(String clientName, String serveurName, String serverHostName, int serverRMIPort) {
+	public EditeurParent(String clientName, String serveurName, String serverHostName, int serverRMIPort, String dessinADeviner) {
 		super(clientName, serveurName, serverHostName, serverRMIPort);
+		super.topText.setText("Draw a "+dessinADeviner);
 		
 	}
 

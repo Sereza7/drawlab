@@ -1,13 +1,22 @@
 package editeurs;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import main.ColourListener;
@@ -20,31 +29,20 @@ import main.Preview;
 import main.PreviewListener;
 import main.ShapeListener;
 import main.ZoneDeDessin;
-
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-
-import javax.swing.JPanel;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.awt.FlowLayout;
+import javax.swing.border.BevelBorder;
 
 public class Editeur extends JFrame {
 	
 	private Preview preview;
 	private final ButtonGroup shapeGroup = new ButtonGroup();
 	private static final long serialVersionUID = 1L ;
+	protected JLabel topText;
 	
 	
 	
 	// l'élément visuel dans lequel on va manipuler des dessins 
 	private ZoneDeDessin zone ;
-	private JLabel picTrophy;
-	private JLabel picLabelSoundOrShare;
+	
 	
 	public Editeur(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
 		super();
@@ -118,6 +116,8 @@ public class Editeur extends JFrame {
 		JLabel picLabelLogo;
 		
 		JPanel logo = new JPanel();
+		logo.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK));
+		logo.setBackground(Color.WHITE);
 		topBar.add(logo);
 		try {
 			image = ImageIO.read(new File("logo.png"));
@@ -130,7 +130,7 @@ public class Editeur extends JFrame {
 		picLabelLogo.setBackground(Color.WHITE);
 		logo.add(picLabelLogo);
 		
-		JLabel topText = new JLabel("What are they drawing?");
+		topText = new JLabel("What are they drawing?");
 		topText.setFont(new Font("Monotype Corsiva", Font.PLAIN, 36));
 		topText.setBackground(Color.WHITE);
 		topBar.add(topText);
@@ -141,6 +141,7 @@ public class Editeur extends JFrame {
 		topBar.add(rank);
 		
 		JPanel trophy = new JPanel();
+		trophy.setBackground(Color.WHITE);
 		topBar.add(trophy);
 		
 		try {
@@ -150,11 +151,12 @@ public class Editeur extends JFrame {
 		}
 		image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
 		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		picTrophy = new JLabel(new ImageIcon(scaledImage));
+		JLabel picTrophy = new JLabel(new ImageIcon(scaledImage));
 		picTrophy.setBackground(Color.WHITE);
 		trophy.add(picTrophy);
 		
 		JPanel soundOrShare = new JPanel();
+		soundOrShare.setBackground(Color.WHITE);
 		topBar.add(soundOrShare);
 		try {
 			image = ImageIO.read(new File("soundOrShare.png"));
@@ -162,11 +164,12 @@ public class Editeur extends JFrame {
 			e.printStackTrace();
 		}
 		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		picLabelSoundOrShare = new JLabel(new ImageIcon(scaledImage));
+		JLabel picLabelSoundOrShare = new JLabel(new ImageIcon(scaledImage));
 		picLabelSoundOrShare.setBackground(Color.WHITE);
 		soundOrShare.add(picLabelSoundOrShare);
 		
 		JPanel logOut = new JPanel();
+		logOut.setBackground(Color.WHITE);
 		topBar.add(logOut);
 		try {
 			image = ImageIO.read(new File("logout.png"));
