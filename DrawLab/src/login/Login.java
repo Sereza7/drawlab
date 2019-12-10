@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+<<<<<<< HEAD
 
 import communication.RecepteurUnicast;
 import main.Dessin;
@@ -27,6 +29,8 @@ import serveur.ProfilServeur;
 import serveur.RemoteEditeurServeur;
 
 import javax.swing.ImageIcon;
+=======
+>>>>>>> login
 
 public class Login extends JFrame {
 	
@@ -117,11 +121,12 @@ public class Login extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (username.getText().length() == 0 || username.getText().equals(" ")) {
-					JOptionPane.showMessageDialog(username, "Cannot leave username empty");
+					JOptionPane.showMessageDialog(username, "Cannot leave username empty", "Username is empty", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
 		username.setBounds(511, 325, 250, 40);
+		username.setFont(fontButton);
 		panel.add(username);
 		JPasswordField password = new JPasswordField();
 		password.setBounds(511, 375, 250, 40);
@@ -144,6 +149,7 @@ public class Login extends JFrame {
 		register.setFont(fontButton);
 		panel.add(register);
 		JButton signIn= new JButton("Sign In");
+<<<<<<< HEAD
 		signIn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -155,6 +161,10 @@ public class Login extends JFrame {
 				}
 			}
 		});		
+=======
+		LoginListener loginListener = new LoginListener(this, username);
+		signIn.addActionListener(loginListener);
+>>>>>>> login
 		signIn.setBounds(559, 458, 130, 60);
 		signIn.setFont(fontButton);
 		panel.add(signIn);
