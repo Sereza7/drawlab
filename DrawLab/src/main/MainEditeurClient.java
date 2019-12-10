@@ -6,20 +6,22 @@ public class MainEditeurClient {
 	public static void main (String [] args) {
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		// le nom de la machine qui héberge le serveur distant
-		String serverHostName = "localhost" ;
+		//String nomMachineServeur = "10.29.227.68" ;
+		String nomMachineServeur = "localhost" ; // mettre l'adresse IP de votre serveur ici
 		// le numro de port sur lequel est déclaré le serveur distant
-		int serverRMIPort = 2010 ;
+		int portRMIServeur = 2010 ;
 		// le nom du serveur distant
-		String sharedWorldName = "EditeurCollaboratif" ;
+		String nomEditeurCollaboratif = "EditeurCollaboratif" ;
 		// le nom de l'éditeur local (ne sert pas à grand chose, du moins pour le moment)
-		String clientName = "editeur" ;
+		//String nomMachineClient = "10.29.227.68" ;
+		String nomMachineClient = "localhost" ; // mettre l'adresse IP de votre client ici
 		System.out.println ("Connexion à un serveur avec les caractéristiques :") ;
-		System.out.println ("nom du client : " + clientName) ;
-		System.out.println ("nom du serveur distant : " + serverHostName) ;
-		System.out.println ("port rmi du serveur : " + serverRMIPort) ;
-		System.out.println ("nom de l'univers partagé : " + sharedWorldName) ;
+		System.out.println ("machine du client : " + nomMachineClient) ;
+		System.out.println ("nom du serveur distant : " + nomMachineServeur) ;
+		System.out.println ("port rmi du serveur : " + portRMIServeur) ;
+		System.out.println ("nom de l'univers partagé : " + nomEditeurCollaboratif) ;
 		// instanciation d'un client déporté qui fera le lien avec le navigateur
-		new Editeur (clientName, sharedWorldName, serverHostName, serverRMIPort) ;
+		new Editeur (nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur) ;
 
 	}
 

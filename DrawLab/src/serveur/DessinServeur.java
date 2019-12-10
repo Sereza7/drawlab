@@ -5,8 +5,9 @@ import java.io.Serializable ;
 import java.rmi.RemoteException ;
 import java.rmi.server.UnicastRemoteObject ;
 import java.util.HashMap ;
+import java.util.List;
 
-import communication.MulticastSender ;
+import communication.EmetteurUnicast;
 import main.CreateurDessin;
 
 // classe de Dessin présente sur le serveur :
@@ -27,16 +28,16 @@ public class DessinServeur extends UnicastRemoteObject implements RemoteDessinSe
 
 	// un attribut permettant au Dessin de diffuser directement ses mises à jour, sans passer par le serveur associé
 	// - cet attribut n'est pas Serializable, du coup on le déclare transient pour qu'il ne soit pas inclu dans la sérialisation
-	protected transient MulticastSender sender ;
-	public void setSender (MulticastSender sender) {
-		this.sender = sender ;
+	protected transient List<EmetteurUnicast> emetteurs ;
+	public void setEmetteurs (List<EmetteurUnicast> emetteurs) {
+		this.emetteurs = emetteurs ;
 	}
 
 	private static final long serialVersionUID = 1L ;
 
 	// constructeur du Dessin sur le serveur : il diffuse alors qu'il faut créer un nouveau dessin sur tous les clients 
-	public DessinServeur (String name, MulticastSender broadcast, CreateurDessin cd, Color color) throws RemoteException {
-		this.sender = broadcast ;
+	public DessinServeur (String name, List<EmetteurUnicast> senders, CreateurDessin cd, Color color) throws RemoteException {
+		this.emetteurs = senders ;
 		this.name = name ;
 		this.cd = cd;
 		this.color = color;
@@ -48,7 +49,9 @@ public class DessinServeur extends UnicastRemoteObject implements RemoteDessinSe
 		hm.put ("h", new Integer (0)) ;
 		hm.put ("color", color) ;
 		hm.put ("cd", cd);
-		broadcast.diffuseMessage ("Dessin", getName (), hm) ;
+		for (EmetteurUnicast sender : senders) {
+			sender.diffuseMessage ("Dessin", getName (), hm) ;
+		}
 	}
 
 	public String getName () throws RemoteException {
@@ -71,7 +74,9 @@ public class DessinServeur extends UnicastRemoteObject implements RemoteDessinSe
 		hm.put ("y", new Integer (y)) ;
 		hm.put ("w", new Integer (w)) ;
 		hm.put ("h", new Integer (h)) ;
-		sender.diffuseMessage ("Bounds", getName (), hm) ;
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("Bounds", getName (), hm) ;
+		}
 	}
 
 	// méthode qui met à jour la position du Dessin, qui diffuse ensuite ce changement à tous les éditeurs clients
@@ -81,7 +86,9 @@ public class DessinServeur extends UnicastRemoteObject implements RemoteDessinSe
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		hm.put ("x", new Integer (x)) ;
 		hm.put ("y", new Integer (y)) ;
-		sender.diffuseMessage ("Location", getName (), hm) ;
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("Location", getName (), hm) ;
+		}
 	}
 	
 	
@@ -89,13 +96,17 @@ public class DessinServeur extends UnicastRemoteObject implements RemoteDessinSe
 		this.z = currentOrder;
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		hm.put ("z", new Integer (z)) ;
-		sender.diffuseMessage ("ZOrder", getName (), hm) ;
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("ZOrder", getName (), hm) ;
+		}
 	}
 	
 	@Override
 	public void supprimer() throws RemoteException {
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
-		sender.diffuseMessage ("Supprimer", getName (), hm) ;
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("Supprimer", getName (), hm) ;
+		}
 		
 	}
 	

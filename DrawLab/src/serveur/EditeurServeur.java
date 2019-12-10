@@ -2,13 +2,15 @@ package serveur ;
 
 import java.awt.Color;
 import java.io.Serializable ;
+import java.net.InetAddress;
 import java.rmi.Naming ;
 import java.rmi.RemoteException ;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap ;
+import java.util.List;
 
-import communication.MulticastSender ;
+import communication.EmetteurUnicast;
 import main.CreateurDessin;
 
 //classe d'éditeur présente sur le serveur :
@@ -21,7 +23,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	protected String name ;
 
 	// le port sur lequel est déclaré le serveur
-	protected int rmiPort ;
+	protected int portRMI ;
 	
 	// la machine sur laquelle se trouve le serveur
 	protected String hostName ;
@@ -29,21 +31,25 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	// un entier pour générer des noms de dessins différents
 	protected int idDessin ;
 	
+	// un entier pour générer des noms de dessins différents
+	protected int portEmission ;
+	
 	// un diffuseur à une liste d'abonnés
-	private MulticastSender sender ;
+	private List<EmetteurUnicast> emetteurs ;
 	
 	// une strutcure pour stocker tous les dessins et y accéder facilement 
 	private HashMap<String, RemoteDessinServeur> sharedDessins = new HashMap<String, RemoteDessinServeur> () ;
 
 	// le constructeur du serveur : il le déclare sur un port rmi de la machine d'exécution
-	protected EditeurServeur (String serveurName, String serverHostName, int serverRMIPort,	String nomGroupeUpdate, int portDiffusionUpdate) throws RemoteException {
-		this.name = serveurName ;
-		this.hostName = serverHostName ;
-		this.rmiPort = serverRMIPort ;
-		sender = new MulticastSender (nomGroupeUpdate, portDiffusionUpdate) ;
+	protected EditeurServeur (String nomServeur, String nomMachineServeur, int portRMIServeur,	int portEmissionUpdate) throws RemoteException {
+		this.name = nomServeur ;
+		this.hostName = nomMachineServeur ;
+		this.portRMI = portRMIServeur ;
+		this.portEmission = portEmissionUpdate ;
+		emetteurs = new ArrayList<EmetteurUnicast> () ;
 		try {
-			// attachcement sur serveur sur un port identifié de la machine d'exécution
-			Naming.rebind ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName, this) ;
+			// attachement sur serveur sur un port identifié de la machine d'exécution
+			Naming.rebind ("//" + nomMachineServeur + ":" + portRMIServeur + "/" + nomServeur, this) ;
 			System.out.println ("pret pour le service") ;
 		} catch (Exception e) {
 			System.out.println ("pb RMICentralManager") ;
@@ -52,21 +58,21 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 
 	@Override
 	public int getRMIPort () {
-		return rmiPort ;
+		return portRMI ;
 	}
 
 	// méthode permettant d'enregistrer un dessin sur un port rmi sur la machine du serveur :
 	// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque dessin
 	public void registerObject (RemoteDessinServeur dessin) {
 		try {
-			Naming.rebind ("//" + hostName + ":" + rmiPort + "/" + dessin.getName (), dessin) ;
-			System.out.println ("ajout de l'objet " + dessin.getName () + " sur le serveur " + hostName + "/"+ rmiPort) ;
-			System.out.println ("objet " + dessin.getName () + " enregistré sur le serveur " + hostName + "/"+ rmiPort) ;
+			Naming.rebind ("//" + hostName + ":" + portRMI + "/" + dessin.getName (), dessin) ;
+			System.out.println ("ajout de l'objet " + dessin.getName () + " sur le serveur " + hostName + "/"+ portRMI) ;
+			System.out.println ("objet " + dessin.getName () + " enregistré sur le serveur " + hostName + "/"+ portRMI) ;
 			System.out.println ("CLIENT/SERVER : objet " + dessin.getName () + " enregistré en x " + dessin.getX () + " et y " + dessin.getY ()) ;
 		} catch (Exception e) {
 			e.printStackTrace () ;
 			try {
-				System.out.println ("échec lors de l'ajout de l'objet " + dessin.getName () + " sur le serveur " + hostName + "/"+ rmiPort) ;
+				System.out.println ("échec lors de l'ajout de l'objet " + dessin.getName () + " sur le serveur " + hostName + "/"+ portRMI) ;
 			} catch (RemoteException e1) {
 				e1.printStackTrace();
 			}
@@ -84,7 +90,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au dessin
 		// et création d'un nouveau dessin de ce nom et associé également à un émetteur multicast...
 		// attention : la classe Dessin utilisée ici est celle du package serveur (et pas celle du package client)
-		RemoteDessinServeur dessin = new DessinServeur ("dessin" + nextId (), sender, cd, color) ;
+		RemoteDessinServeur dessin = new DessinServeur ("dessin" + nextId (), emetteurs, cd, color) ;
 		// enregistrement du dessin pour accès rmi distant
 		registerObject (dessin) ;
 		// ajout du dessin dans la liste des dessins pour accès plus effice au dessin
@@ -119,16 +125,15 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 		return new ArrayList<RemoteDessinServeur> (sharedDessins.values()) ;
 	}
 
-	// méthode indiquant quel est le nom du groupe de multicast
+	// méthode indiquant quel est le port d'émission/réception à utiliser pour le client qui rejoint le serveur
+	// on utilise une valeur arbitraitre de port qu'on incrémente de 1 à chaque arrivée d'un nouveau client
+	// cela permettra d'avoir plusieurs clients sur la même machine, chacun avec un canal de communication distinct
+	// sur un port différent des autres clients
 	@Override
-	public String getMulticastGroup () throws RemoteException {
-		return (sender.getNomGroupe ()) ;
-	}
-
-	// méthode indiquant quel est le port de diffusion du groupe de multicast	
-	@Override
-	public int getMulticastPort () throws RemoteException {
-		return (sender.getPortDiffusion ()) ;
+	public int getPortEmission (InetAddress adresseClient) throws RemoteException {
+		EmetteurUnicast emetteur = new EmetteurUnicast (adresseClient, portEmission++) ;
+		emetteurs.add (emetteur) ;
+		return (emetteur.getPortEmission ()) ;
 	}
 
 	// méthode permettant juste de vérifier que le serveur est lancé

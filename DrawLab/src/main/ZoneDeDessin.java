@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import communication.MulticastReceiver;
+import communication.RecepteurUnicast;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteEditeurServeur;
 
@@ -45,7 +47,7 @@ public class ZoneDeDessin extends JPanel{
 	private Thread threadReceiver ;
 	
 	// le récepteur de messages diffusés aux abonnés
-	private MulticastReceiver multicastReceiver ;
+	private RecepteurUnicast recepteurUnicast ;
 	
 	// le serveur distant qui centralise toutes les informations
 	private RemoteEditeurServeur serveur ;
@@ -89,15 +91,22 @@ public class ZoneDeDessin extends JPanel{
 			System.exit (1) ;
 		}
 		try {
-			// création d'un récepteur multicast en demandant les informations de groupe et de port au serveur
-			// pour éviter de dupliquer ces informations ici
-			multicastReceiver = new MulticastReceiver (serveur.getMulticastGroup (),  serveur.getMulticastPort ()) ;
-			multicastReceiver.setDeportedClient (this) ;
+			// création d'un récepteur unicast en demandant l'information de numéro port au serveur
+			// en même temps on transmet au serveur l'adresse IP de la machine du client au serveur
+			// de façon à ce que ce dernier puisse par la suite envoyer des messages de mise à jour à ce récepteur 
+			recepteurUnicast = new RecepteurUnicast (InetAddress.getByName (clientName), serveur.getPortEmission (InetAddress.getByName (clientName))) ;
+			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
+			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
+			// et qu'on ne sait pas laquelle sera retournée par InetAddress.getLocalHost ()...
+			//recepteurUnicast = new RecepteurUnicast (serveur.getPortEmission (InetAddress.getLocalHost ())) ;
+			recepteurUnicast.setClientLocal (this) ;
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
 		// création d'un Thread pour pouvoir recevoir les messages du serveur en parallèle des interactions avec les dessins
-		threadReceiver = new Thread (multicastReceiver) ;
+		threadReceiver = new Thread (recepteurUnicast) ;
 		// démarrage effectif du Thread
 		threadReceiver.start () ;
 		setBackground(Color.white);

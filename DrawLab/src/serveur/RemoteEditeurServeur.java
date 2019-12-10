@@ -1,6 +1,7 @@
 package serveur ;
 
 import java.awt.Color;
+import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException ;
 import java.util.ArrayList;
@@ -14,8 +15,7 @@ import main.CreateurDessin;
 
 public interface RemoteEditeurServeur extends Remote {
 
-   String getMulticastGroup () throws RemoteException ;
-   int getMulticastPort () throws RemoteException ;
+   int getPortEmission (InetAddress adresseClient) throws RemoteException ;
    void answer (String question) throws RemoteException ;
    int getRMIPort () throws RemoteException ;
    RemoteDessinServeur addDessin (int x, int y, int w, int h, CreateurDessin cd, Color color) throws RemoteException ;
