@@ -6,8 +6,8 @@ public class MainEditeurClient {
 	public static void main (String [] args) {
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		// le nom de la machine qui héberge le serveur distant
-		//String nomMachineServeur = "10.29.227.68" ;
-		String nomMachineServeur = "localhost" ; // mettre l'adresse IP de votre serveur ici
+		String nomMachineServeur = "10.29.227.68" ;
+		//String nomMachineServeur = "localhost" ; // mettre l'adresse IP de votre serveur ici
 		// le numro de port sur lequel est déclaré le serveur distant
 		int portRMIServeur = 2010 ;
 		// le nom du serveur distant

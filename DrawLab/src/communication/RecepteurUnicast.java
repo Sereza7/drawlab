@@ -22,6 +22,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 
 	// l'éditeur local qu'on préviendra suite aux messages reçus
 	private ZoneDeDessin clientLocal ;
+	private Login loginLocal;
 
 	// les données à récupérer conformément au format des données envoyées :
 	// - une chaine de caractère pour décrire l'action à réaliser
@@ -45,6 +46,10 @@ public class RecepteurUnicast extends Thread implements Runnable {
 	public void setClientLocal (ZoneDeDessin clientLocal) {
 		this.clientLocal = clientLocal ;
 		System.out.println(clientLocal);
+	}
+	public void setLoginLocal (Login login) {
+		this.loginLocal = login ;
+		System.out.println(login);
 	}
 
 	// méthode de réception du message : on extrait d'un flux de très bas niveau des informations formatées correctement 
@@ -99,11 +104,11 @@ public class RecepteurUnicast extends Thread implements Runnable {
 				}
 			}
 			else if (command.equals ("Profil")) {
-				/*try {
-					profilLocal.ajouterProfil (name, (int)hm.get ("x"), (int)hm.get ("y"), (int)hm.get ("w"), (int)hm.get ("h"));
+				try {
+					loginLocal.ajouterProfil (name);
 				} catch (RemoteException e) {
 					e.printStackTrace();
-				}*/
+				}
 			} else if (command.equals("Classement")) {
 				/*
 				profilLocal.profilUpdateClassement(name, (int)hm.get("classement"));
@@ -119,11 +124,6 @@ public class RecepteurUnicast extends Thread implements Runnable {
 				*/
 			}
 		}
-	}
-
-	public void setProfilLocal(Login login) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
