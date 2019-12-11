@@ -2,20 +2,10 @@ package editeurs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -29,14 +19,13 @@ import main.Preview;
 import main.PreviewListener;
 import main.ShapeListener;
 import main.ZoneDeDessin;
-import javax.swing.border.BevelBorder;
+import elementsGraphiques.TopBar;
 
 public class Editeur extends JFrame {
 	
 	private Preview preview;
 	private final ButtonGroup shapeGroup = new ButtonGroup();
 	private static final long serialVersionUID = 1L ;
-	protected JLabel topText;
 	
 	
 	
@@ -44,7 +33,7 @@ public class Editeur extends JFrame {
 	private ZoneDeDessin zone ;
 	
 	
-	public Editeur(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
+	public Editeur(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort, String titre) {
 		super();
 		
 		zone = new ZoneDeDessin(clientName, serveurName, serverHostName, serverRMIPort);
@@ -106,80 +95,9 @@ public class Editeur extends JFrame {
 		colourChooser.getSelectionModel().addChangeListener((new ColourListener(colourChooser, zone)));
 		zone.addPropertyChangeListener(new PreviewListener(preview));
 		
-		JPanel topBar = new JPanel();
-		topBar.setBackground(Color.WHITE);
+		TopBar topBar = new TopBar("What are they drawing?");
 		getContentPane().add(topBar, BorderLayout.NORTH);
-		topBar.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		BufferedImage  image = null;
-		Image scaledImage;
-		JLabel picLabelLogo;
-		
-		JPanel logo = new JPanel();
-		logo.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK));
-		logo.setBackground(Color.WHITE);
-		topBar.add(logo);
-		try {
-			image = ImageIO.read(new File("logo.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		picLabelLogo = new JLabel(new ImageIcon(scaledImage));
-		picLabelLogo.setBackground(Color.WHITE);
-		logo.add(picLabelLogo);
-		
-		topText = new JLabel("What are they drawing?");
-		topText.setFont(new Font("Monotype Corsiva", Font.PLAIN, 36));
-		topText.setBackground(Color.WHITE);
-		topBar.add(topText);
-		
-		JLabel rank = new JLabel("Rank: 1");
-		rank.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		rank.setBackground(Color.WHITE);
-		topBar.add(rank);
-		
-		JPanel trophy = new JPanel();
-		trophy.setBackground(Color.WHITE);
-		topBar.add(trophy);
-		
-		try {
-			image = ImageIO.read(new File("trophy.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		JLabel picTrophy = new JLabel(new ImageIcon(scaledImage));
-		picTrophy.setBackground(Color.WHITE);
-		trophy.add(picTrophy);
-		
-		JPanel soundOrShare = new JPanel();
-		soundOrShare.setBackground(Color.WHITE);
-		topBar.add(soundOrShare);
-		try {
-			image = ImageIO.read(new File("soundOrShare.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		JLabel picLabelSoundOrShare = new JLabel(new ImageIcon(scaledImage));
-		picLabelSoundOrShare.setBackground(Color.WHITE);
-		soundOrShare.add(picLabelSoundOrShare);
-		
-		JPanel logOut = new JPanel();
-		logOut.setBackground(Color.WHITE);
-		topBar.add(logOut);
-		try {
-			image = ImageIO.read(new File("logout.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
-		JLabel picLabellogOut = new JLabel(new ImageIcon(scaledImage));
-		picLabellogOut.setBackground(Color.WHITE);
-		logOut.add(picLabellogOut);
 		setVisible(true);
 		preview.setDessin(zone.getCd(), zone.getForeground());
 		

@@ -8,7 +8,7 @@ public class MainEditeurClient {
 	public static void main (String [] args) {
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		// le nom de la machine qui héberge le serveur distant
-		String nomMachineServeur = "10.29.227.68" ;
+		String nomMachineServeur = "localhost" ;
 		//String nomMachineServeur = "localhost" ; // mettre l'adresse IP de votre serveur ici
 		// le numro de port sur lequel est déclaré le serveur distant
 		int portRMIServeur = 2010 ;
@@ -23,7 +23,7 @@ public class MainEditeurClient {
 		System.out.println ("port rmi du serveur : " + portRMIServeur) ;
 		System.out.println ("nom de l'univers partagé : " + nomEditeurCollaboratif) ;
 		// instanciation d'un client déporté qui fera le lien avec le navigateur
-		new Editeur (nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur) ;
+		new Editeur (nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur, "What are they drawing?") ;
 
 	}
 
