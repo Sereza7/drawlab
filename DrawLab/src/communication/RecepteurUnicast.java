@@ -123,6 +123,15 @@ public class RecepteurUnicast extends Thread implements Runnable {
 				}
 				*/
 			}
+			else if (command.equals("Session")) {
+				/*
+				try {
+					profilLocal.supprimerProfil(name);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+				*/
+			}
 		}
 	}
 
