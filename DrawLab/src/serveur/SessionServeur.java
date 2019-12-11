@@ -38,7 +38,7 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 	private static final long serialVersionUID = 1L ;
 
 	// constructeur du Dessin sur le serveur : il diffuse alors qu'il faut créer un nouveau dessin sur tous les clients 
-	public SessionServeur (String name, List<EmetteurUnicast> senders, Parametres parametres, ProfilServeur utilisateur) throws RemoteException {
+	public SessionServeur (String name, List<EmetteurUnicast> senders, Parametres parametres, RemoteProfilServeur utilisateur) throws RemoteException {
 		this.emetteurs = senders ;
 		this.parametres = parametres ;
 		this.name=name;

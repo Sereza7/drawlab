@@ -57,7 +57,7 @@ public class Login extends JFrame {
 	public void init (final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
 		try {
 			// tentative de connexion au serveur distant
-			serveur = (RemoteEditeurServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
+			serveur = (RemoteGlobalServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
 			
 			// invocation d'une ptremière méthode juste pour test
 			serveur.answer ("hello from " + getName ()) ;

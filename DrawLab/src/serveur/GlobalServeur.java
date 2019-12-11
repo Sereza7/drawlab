@@ -38,10 +38,15 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	// un diffuseur à une liste d'abonnés
 	private List<EmetteurUnicast> emetteurs ;
 	
-	// une strutcure pour stocker tous les dessins et y accéder facilement 
+	// A SUPPRIMER PLUS TARD
+	// une structure pour stocker tous les dessins et y accéder facilement 
 	private HashMap<String, RemoteDessinServeur> sharedDessins = new HashMap<String, RemoteDessinServeur> () ;
+	//FIN DE LA SUPPRESSION
+	
+	// une structure pour stocker  toutes les sessions et y accéder facilement 
+	private HashMap<String, RemoteSessionServeur> sharedSessions = new HashMap<String, RemoteSessionServeur> () ;
 
-	// une strutcure pour stocker tous les profils et y accéder facilement 
+	// une structure pour stocker tous les profils et y accéder facilement 
 	private HashMap<String, RemoteProfilServeur> sharedProfils = new HashMap<String, RemoteProfilServeur> () ;
 
 	// le constructeur du serveur : il le déclare sur un port rmi de la machine d'exécution
@@ -59,21 +64,13 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 			System.out.println ("pb RMICentralManager") ;
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#getRMIPort()
-	 */
-	@Override
 	public int getRMIPort () {
 		return portRMI ;
 	}
 
 	// méthode permettant d'enregistrer un dessin sur un port rmi sur la machine du serveur :
 	// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque dessin
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#registerDessin(serveur.RemoteDessinServeur)
-	 */
-	@Override
+	
 	public void registerDessin (RemoteDessinServeur dessin) {
 		try {
 			Naming.rebind ("//" + hostName + ":" + portRMI + "/" + dessin.getName (), dessin) ;
@@ -92,10 +89,7 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	
 	// méthode permettant d'enregistrer un profil sur un port rmi sur la machine du serveur :
 		// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque profil
-		/* (non-Javadoc)
-		 * @see serveur.RemoteGlobalServer#registerProfil(serveur.RemoteProfilServeur)
-		 */
-		@Override
+		
 		public void registerProfil (RemoteProfilServeur profil) {
 			try {
 				Naming.rebind ("//" + hostName + ":" + portRMI + "/" + profil.getName (), profil) ;
@@ -112,15 +106,26 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 			}
 		}
 
+	public void registerSession (RemoteSessionServeur session) {
+		try {
+			Naming.rebind ("//" + hostName + ":" + portRMI + "/" + session.getName (), session) ;
+			System.out.println ("ajout de l'objet " + session.getName () + " sur le serveur " + hostName + "/"+ portRMI) ;
+			System.out.println ("objet " + session.getName () + " enregistré sur le serveur " + hostName + "/"+ portRMI) ;
+		} catch (Exception e) {
+			e.printStackTrace () ;
+			try {
+				System.out.println ("échec lors de l'ajout de l'objet " + session.getName () + " sur le serveur " + hostName + "/"+ portRMI) ;
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L ;
 
 	// méthodes permettant d'ajouter un nouveau dessin dans le système
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#addDessin(int, int, int, int, main.CreateurDessin, java.awt.Color)
-	 */
 	@Override
 	public synchronized RemoteDessinServeur addDessin (int x, int y, int w, int h, CreateurDessin cd, Color color) throws RemoteException {
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au dessin
@@ -157,40 +162,51 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 		System.out.println(profil);
 		return  profil;
 	}
-
+	
+	public synchronized RemoteSessionServeur addSession ( RemoteProfilServeur utilisateur) throws RemoteException {
+		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au profil
+		// et création d'un nouveau profil de ce nom et associé également à un émetteur multicast...
+		// attention : la classe Profil utilisée ici est celle du package serveur (et pas celle du package client)
+		RemoteSessionServeur session = new SessionServeur("profil" + nextId (), emetteurs, utilisateur.getDefaultParameters(), utilisateur) ;
+		// enregistrement du session pour accès rmi distant
+		registerSession (session) ;
+		// ajout du session dans la liste des dessins pour accès plus efficace au dessin
+		sharedSessions.put (session.getName (), session) ;
+		System.out.println ("addSession : sharedSessions = " + sharedSessions) ;
+		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
+		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
+		System.out.println(session);
+		return  session;
+	}
 	// méthode permettant d'accéder à un proxy d'un des dessins
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#getDessin(java.lang.String)
-	 */
 	@Override
 	public synchronized RemoteDessinServeur getDessin (String name) throws RemoteException {
 		System.out.println ("getDessin " + name + " dans sharedDessins = " + sharedDessins) ;
 		return sharedDessins.get (name) ;
 	}
 	// méthode permettant d'accéder à un proxy d'un des profils
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#getProfil(java.lang.String)
-	 */
 	@Override
 	public synchronized RemoteProfilServeur getProfil (String name) throws RemoteException {
 		System.out.println ("getProfil " + name + " dans sharedProfils = " + sharedProfils) ;
 		return sharedProfils.get (name) ;
 	}
 	
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#supprimerDessin(java.lang.String)
-	 */
+	public synchronized RemoteSessionServeur getSession(String name) throws RemoteException {
+		System.out.println ("getSession " + name + " dans sharedSessions = " + sharedDessins) ;
+		return sharedSessions.get (name) ;
+	}
+	
 	@Override
 	public synchronized void supprimerDessin(String name) throws RemoteException {
 		sharedDessins.remove(name);
 	}
-	
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#supprimerProfil(java.lang.String)
-	 */
 	@Override
 	public synchronized void supprimerProfil(String name) throws RemoteException {
 		sharedProfils.remove(name);
+	}
+	
+	public synchronized void supprimerSession(String name) throws RemoteException {
+		sharedSessions.remove(name);
 	}
 	
 	// méthode qui incrémente le compteur de dessins pour avoir un id unique pour chaque dessin :
@@ -198,27 +214,26 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	/* (non-Javadoc)
 	 * @see serveur.RemoteGlobalServer#nextId()
 	 */
-	@Override
 	public int nextId () {
 		idDessin++ ; 
 		return idDessin ; 
 	}
 
 	// méthode permettant de récupérer la liste des dessins : utile lorsqu'un éditeur client se connecte 
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#getSharedDessins()
-	 */
+
 	@Override
 	public synchronized ArrayList<RemoteDessinServeur> getSharedDessins () throws RemoteException {
 		return new ArrayList<RemoteDessinServeur> (sharedDessins.values()) ;
 	}
 	// méthode permettant de récupérer la liste des profils : utile lorsqu'un éditeur client se connecte 
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#getSharedProfils()
-	 */
+
 	@Override
 	public synchronized ArrayList<RemoteProfilServeur> getSharedProfils () throws RemoteException {
 		return new ArrayList<RemoteProfilServeur> (sharedProfils.values()) ;
+	}
+	
+	public synchronized ArrayList<RemoteSessionServeur> getSharedSessions () throws RemoteException {
+		return new ArrayList<RemoteSessionServeur> (sharedSessions.values()) ;
 	}
 
 	// méthode indiquant quel est le port d'émission/réception à utiliser pour le client qui rejoint le serveur

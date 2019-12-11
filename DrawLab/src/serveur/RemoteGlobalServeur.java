@@ -11,16 +11,6 @@ import main.Profil.ProfilType;
 
 public interface RemoteGlobalServeur extends Remote{
 
-	int getRMIPort();
-
-	// méthode permettant d'enregistrer un dessin sur un port rmi sur la machine du serveur :
-	// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque dessin
-	void registerDessin(RemoteDessinServeur dessin);
-
-	// méthode permettant d'enregistrer un profil sur un port rmi sur la machine du serveur :
-	// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque profil
-	void registerProfil(RemoteProfilServeur profil);
-
 	// méthodes permettant d'ajouter un nouveau dessin dans le système
 	RemoteDessinServeur addDessin(int x, int y, int w, int h, CreateurDessin cd, Color color) throws RemoteException;
 
@@ -36,10 +26,6 @@ public interface RemoteGlobalServeur extends Remote{
 	void supprimerDessin(String name) throws RemoteException;
 
 	void supprimerProfil(String name) throws RemoteException;
-
-	// méthode qui incrémente le compteur de dessins pour avoir un id unique pour chaque dessin :
-	// dans une version ultérieure avec récupération de dessins à aprtir d'une sauvegarde, il faudra également avoir sauvegardé ce nombre...
-	int nextId();
 
 	// méthode permettant de récupérer la liste des dessins : utile lorsqu'un éditeur client se connecte 
 	ArrayList<RemoteDessinServeur> getSharedDessins() throws RemoteException;

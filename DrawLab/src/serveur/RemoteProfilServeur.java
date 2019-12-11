@@ -9,6 +9,8 @@ public interface RemoteProfilServeur extends Remote{
 	String getName() throws RemoteException;
 
 	String getUserName() throws RemoteException;
+	
+	Parametres getDefaultParameters() throws RemoteException;
 
 	int getClassement() throws RemoteException;
 

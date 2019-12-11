@@ -2,7 +2,7 @@ package serveur;
 import java.rmi.RemoteException ;
 import java.rmi.registry.LocateRegistry ;
 
-public class MainEditeurServeur {
+public class MainGlobalServeur {
 
 	public static void main (String args[]) {
 		//String nomMachineRMI = "192.168.43.146" ;
@@ -20,7 +20,7 @@ public class MainEditeurServeur {
 		try {
 			// création d'un registre rmi sur le port rmi choisi, indispensable pour pouvoir attacher ensuite un serveur 
 			LocateRegistry.createRegistry (portRMI) ;
-			new EditeurServeur (nomServeur, nomMachineRMI, portRMI, portEmissionUpdates) ;
+			new GlobalServeur (nomServeur, nomMachineRMI, portRMI, portEmissionUpdates) ;
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
