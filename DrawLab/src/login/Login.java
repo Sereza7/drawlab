@@ -12,7 +12,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,12 +23,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import communication.RecepteurUnicast;
-import main.Dessin;
 import main.Profil;
-import serveur.ProfilServeur;
+import main.Profil.ProfilType;
 import serveur.RemoteEditeurServeur;
+import serveur.RemoteProfilServeur;
 
-import javax.swing.ImageIcon;
 
 public class Login extends JFrame {
 	
@@ -40,8 +41,7 @@ public class Login extends JFrame {
 	private RemoteEditeurServeur serveur;
 	private RecepteurUnicast recepteurUnicast;
 	private Thread threadReceiver;
-	private HashMap<String, Dessin> profils = new HashMap<String, Dessin> () ;
-	private Profil profil;
+	private HashMap<String, Profil> profils = new HashMap<String, Profil> () ;
 	
 	public Login (final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
 		setDefaultLookAndFeelDecorated(true);
@@ -56,12 +56,13 @@ public class Login extends JFrame {
 		try {
 			// tentative de connexion au serveur distant
 			serveur = (RemoteEditeurServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
+			
 			// invocation d'une ptremière méthode juste pour test
 			serveur.answer ("hello from " + getName ()) ;
 			// récupération de tous les dessins déjà présents sur le serveur
-			ArrayList<ProfilServeur> remoteProfils = serveur.getSharedProfils() ;
-			for (ProfilServeur rd : remoteProfils) {
-				ajouterProfil(rd, rd.getName ()) ;
+			ArrayList<RemoteProfilServeur> remoteProfils = serveur.getSharedProfils() ;
+			for (RemoteProfilServeur rd : remoteProfils) {
+				ajouterProfil(rd.getName (), rd) ;
 			}
 		} catch (Exception e) {
 			System.out.println ("probleme liaison CentralManager") ;
@@ -77,7 +78,7 @@ public class Login extends JFrame {
 			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
 			// et qu'on ne sait pas laquelle sera retournée par InetAddress.getLocalHost ()...
 			//recepteurUnicast = new RecepteurUnicast (serveur.getPortEmission (InetAddress.getLocalHost ())) ;
-			recepteurUnicast.setProfilLocal (this) ;
+			recepteurUnicast.setLoginLocal (this) ;
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		} catch (UnknownHostException e) {
@@ -117,12 +118,19 @@ public class Login extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (username.getText().length() == 0 || username.getText().equals(" ")) {
-					JOptionPane.showMessageDialog(username, "Cannot leave username empty");
+					JOptionPane.showMessageDialog(username, "Cannot leave username empty", "Username is empty", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
 		username.setBounds(511, 325, 250, 40);
+		username.setFont(fontButton);
 		panel.add(username);
+		
+		JCheckBox cbParent = new JCheckBox("Parent");
+		cbParent.setBounds(768, 325, 114, 42);
+		cbParent.setFont(fontButton);
+		panel.add(cbParent);
+		
 		JPasswordField password = new JPasswordField();
 		password.setBounds(511, 375, 250, 40);
 		panel.add(password);
@@ -132,11 +140,22 @@ public class Login extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					ajouterProfil ( username.getText());
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				boolean alreadyInUse = false;
+				for (Profil profilIter: profils.values()) {
+					if (profilIter.getUserName().equals(username.getText())) {
+						alreadyInUse=true;
+					}
+				}
+				if (!alreadyInUse) {
+					try {
+						serveur.addProfil(0, cbParent.isSelected() ? ProfilType.ADULTE : ProfilType.ENFANT, username.getText());
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else {
+					System.out.println("This username is already taken.");
 				}
 			}
 		});
@@ -144,17 +163,10 @@ public class Login extends JFrame {
 		register.setFont(fontButton);
 		panel.add(register);
 		JButton signIn= new JButton("Sign In");
-		signIn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					ajouterProfil ( username.getText());
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});		
+
+
+		LoginListener loginListener = new LoginListener(this, username);
+		signIn.addActionListener(loginListener);
 		signIn.setBounds(559, 458, 130, 60);
 		signIn.setFont(fontButton);
 		panel.add(signIn);
@@ -185,31 +197,35 @@ public class Login extends JFrame {
 	
 
 		
-	public void ajouterProfil (ProfilServeur proxy, String proxyName) throws RemoteException {
-		// création effective d'un profil
-		if(proxy!=null) {
-			this.profil=new Profil(proxy);
+	public void ajouterProfil (String proxyName, RemoteProfilServeur proxy) throws RemoteException {
+		// création effective d'un profil sur le serveur
+		if (proxy!=null) {
+			Profil currentProfil = new Profil(proxy);
+			profils.put(proxyName, currentProfil);
 		}
+		else {
+			System.out.println("The proxy "+proxyName+" for the profil searched is null.");
+		}
+		
 	}
 	public synchronized void ajouterProfil (String proxyName) throws RemoteException {
 		System.out.println("ajout du profil " + proxyName);
 		// on ne l'ajoute que s'il n'est pas déjà présent
 		// - il pourrait déjà être présent si il avait été créé localement par une interaction dans cet éditeur local
 		if (! profils.containsKey(proxyName)) {
-			ProfilServeur proxy = null ;
+			System.out.println("proxy " + proxyName + " n'est pas présent en local. On va le chercher sur le serveur.");
+			// ajout du dessin
+			RemoteProfilServeur proxy=null;
 			try {
-				// récupération du proxy via une demande au serveur
-				proxy = serveur.getProfil (proxyName);
-			} catch (RemoteException e) {
+				proxy = serveur.getProfil(proxyName);
+			}catch(RemoteException e) {
 				e.printStackTrace();
 			}
-			if (proxy == null) {
-				System.out.println("proxy " + proxyName + " null");
-			}
-			// ajout du dessin
-			ajouterProfil (proxy, proxyName) ;
+			System.out.println(proxy);
+			ajouterProfil (proxyName, proxy) ;
+			
 		} else {
-			System.out.println ("dessin " + proxyName + " était déjà présent") ;
+			System.out.println ("profil " + proxyName + " était déjà présent") ;
 		}
 	};
 }

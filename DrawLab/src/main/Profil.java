@@ -2,7 +2,7 @@ package main;
 
 import java.rmi.RemoteException;
 
-import serveur.ProfilServeur;
+import serveur.RemoteProfilServeur;
 
 public class Profil {
 	
@@ -11,13 +11,13 @@ public class Profil {
 	}
 	ProfilType type;
 	int classement;
-	String nom;
-	private ProfilServeur proxy;
+	String username;
+	private RemoteProfilServeur proxy;
 	
-	public Profil(ProfilServeur proxy) {
+	public Profil(RemoteProfilServeur proxy) {
 		this.proxy=proxy;
 		try {
-			nom = proxy.getName();
+			username = proxy.getUserName();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -27,6 +27,10 @@ public class Profil {
 	
 	public ProfilType getProfilType() {
 		return type;
+	}
+
+	public String getUserName() {
+		return this.username;
 	}
 	
 }

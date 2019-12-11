@@ -20,11 +20,11 @@ public interface RemoteEditeurServeur extends Remote {
    void answer (String question) throws RemoteException ;
    int getRMIPort () throws RemoteException ;
    RemoteDessinServeur addDessin (int x, int y, int w, int h, CreateurDessin cd, Color color) throws RemoteException ;
-   ProfilServeur addProfil ( int ranking, ProfilType type) throws RemoteException;
+   RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username) throws RemoteException;
    ArrayList <RemoteDessinServeur> getSharedDessins () throws RemoteException ;
-   ArrayList <ProfilServeur> getSharedProfils () throws RemoteException ;
+   ArrayList <RemoteProfilServeur> getSharedProfils () throws RemoteException ;
    RemoteDessinServeur getDessin(String name) throws RemoteException ;
-   ProfilServeur getProfil (String name) throws RemoteException;
+   RemoteProfilServeur getProfil (String name) throws RemoteException;
    void supprimerDessin(String name) throws RemoteException;
    void supprimerProfil(String name) throws RemoteException;
 
