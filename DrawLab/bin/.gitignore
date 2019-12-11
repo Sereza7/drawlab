@@ -1,4 +1,6 @@
-/communication/
+/.DS_Store
+/.classpath
+/.project
+/.settings/
+/img/
 /login/
-/main/
-/serveur/

@@ -20,17 +20,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-<<<<<<< HEAD
 
 import communication.RecepteurUnicast;
 import main.Dessin;
 import main.Profil;
+import login.LoginListener;
 import serveur.ProfilServeur;
 import serveur.RemoteEditeurServeur;
 
-import javax.swing.ImageIcon;
-=======
->>>>>>> login
 
 public class Login extends JFrame {
 	
@@ -149,22 +146,9 @@ public class Login extends JFrame {
 		register.setFont(fontButton);
 		panel.add(register);
 		JButton signIn= new JButton("Sign In");
-<<<<<<< HEAD
-		signIn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					ajouterProfil ( username.getText());
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});		
-=======
+
 		LoginListener loginListener = new LoginListener(this, username);
 		signIn.addActionListener(loginListener);
->>>>>>> login
 		signIn.setBounds(559, 458, 130, 60);
 		signIn.setFont(fontButton);
 		panel.add(signIn);

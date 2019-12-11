@@ -3,9 +3,10 @@ package login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import main.Accueil;
 
 public class LoginListener implements ActionListener {
 
@@ -20,10 +21,7 @@ public class LoginListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (username.getText().equals("test")) {
-			JFrame frame = new JFrame();
-			frame.setSize(1000,600);
-			frame.setTitle("test");
-			frame.setVisible(true);
+			Accueil accueil = new Accueil("test", 0);
 			
 			login.dispose();
 		} else {
