@@ -42,7 +42,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	private HashMap<String, RemoteDessinServeur> sharedDessins = new HashMap<String, RemoteDessinServeur> () ;
 
 	// une strutcure pour stocker tous les profils et y accéder facilement 
-	private HashMap<String, ProfilServeur> sharedProfils = new HashMap<String, ProfilServeur> () ;
+	private HashMap<String, RemoteProfilServeur> sharedProfils = new HashMap<String, RemoteProfilServeur> () ;
 
 	// le constructeur du serveur : il le déclare sur un port rmi de la machine d'exécution
 	protected EditeurServeur (String nomServeur, String nomMachineServeur, int portRMIServeur,	int portEmissionUpdate) throws RemoteException {
@@ -85,7 +85,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	
 	// méthode permettant d'enregistrer un profil sur un port rmi sur la machine du serveur :
 		// - comme cela on pourra également invoquer directement des méthodes en rmi également sur chaque profil
-		public void registerProfil (ProfilServeur profil) {
+		public void registerProfil (RemoteProfilServeur profil) {
 			try {
 				Naming.rebind ("//" + hostName + ":" + portRMI + "/" + profil.getName (), profil) ;
 				System.out.println ("ajout de l'objet " + profil.getName () + " sur le serveur " + hostName + "/"+ portRMI) ;
@@ -124,11 +124,11 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	}
 	
 	// méthodes permettant d'ajouter un nouveau profil dans le système
-	public synchronized ProfilServeur addProfil ( int ranking, ProfilType type) throws RemoteException {
+	public synchronized RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username) throws RemoteException {
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au profil
 		// et création d'un nouveau profil de ce nom et associé également à un émetteur multicast...
 		// attention : la classe Profil utilisée ici est celle du package serveur (et pas celle du package client)
-		ProfilServeur profil = new ProfilServeur ("dessin" + nextId (), emetteurs,  ranking,  type) ;
+		RemoteProfilServeur profil = new ProfilServeur ("profil" + nextId (), emetteurs,  ranking,  type, username) ;
 		// enregistrement du profil pour accès rmi distant
 		registerProfil (profil) ;
 		// ajout du profil dans la liste des dessins pour accès plus efficace au dessin
@@ -136,7 +136,8 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 		System.out.println ("addProfil : sharedProfils = " + sharedProfils) ;
 		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
 		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
-		return profil ;
+		System.out.println(profil);
+		return  profil;
 	}
 
 	// méthode permettant d'accéder à un proxy d'un des dessins
@@ -147,7 +148,7 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	}
 	// méthode permettant d'accéder à un proxy d'un des profils
 	@Override
-	public synchronized ProfilServeur getProfil (String name) throws RemoteException {
+	public synchronized RemoteProfilServeur getProfil (String name) throws RemoteException {
 		System.out.println ("getProfil " + name + " dans sharedProfils = " + sharedProfils) ;
 		return sharedProfils.get (name) ;
 	}
@@ -173,8 +174,8 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 		return new ArrayList<RemoteDessinServeur> (sharedDessins.values()) ;
 	}
 	// méthode permettant de récupérer la liste des profils : utile lorsqu'un éditeur client se connecte 
-	public synchronized ArrayList<ProfilServeur> getSharedProfils () throws RemoteException {
-		return new ArrayList<ProfilServeur> (sharedProfils.values()) ;
+	public synchronized ArrayList<RemoteProfilServeur> getSharedProfils () throws RemoteException {
+		return new ArrayList<RemoteProfilServeur> (sharedProfils.values()) ;
 	}
 
 	// méthode indiquant quel est le port d'émission/réception à utiliser pour le client qui rejoint le serveur
