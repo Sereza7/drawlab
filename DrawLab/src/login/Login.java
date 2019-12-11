@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,9 +24,7 @@ import javax.swing.JTextField;
 
 import communication.RecepteurUnicast;
 import main.Profil;
-import login.LoginListener;
 import main.Profil.ProfilType;
-import serveur.ProfilServeur;
 import serveur.RemoteEditeurServeur;
 import serveur.RemoteProfilServeur;
 
@@ -126,6 +125,12 @@ public class Login extends JFrame {
 		username.setBounds(511, 325, 250, 40);
 		username.setFont(fontButton);
 		panel.add(username);
+		
+		JCheckBox cbParent = new JCheckBox("Parent");
+		cbParent.setBounds(768, 325, 114, 42);
+		cbParent.setFont(fontButton);
+		panel.add(cbParent);
+		
 		JPasswordField password = new JPasswordField();
 		password.setBounds(511, 375, 250, 40);
 		panel.add(password);
@@ -143,7 +148,7 @@ public class Login extends JFrame {
 				}
 				if (!alreadyInUse) {
 					try {
-						serveur.addProfil(0, ProfilType.ADULTE,username.getText());
+						serveur.addProfil(0, cbParent.isSelected() ? ProfilType.ADULTE : ProfilType.ENFANT, username.getText());
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
