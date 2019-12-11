@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 import javax.swing.JPanel;
 
 import serveur.RemoteDessinServeur;
+import zonesDeDessin.ZoneDeDessin;
 
 public abstract class Dessin extends JPanel{
 

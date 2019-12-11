@@ -5,6 +5,8 @@ import javax.swing.JColorChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import zonesDeDessin.ZoneDeDessin;
+
 public class ColourListener implements ChangeListener{
 	
 	private JColorChooser colourChooser;

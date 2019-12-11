@@ -18,7 +18,7 @@ import main.CreateurRectanglePlein;
 import main.Preview;
 import main.PreviewListener;
 import main.ShapeListener;
-import main.ZoneDeDessin;
+import zonesDeDessin.ZoneDeDessin;
 import elementsGraphiques.TopBar;
 
 public class Editeur extends JFrame {

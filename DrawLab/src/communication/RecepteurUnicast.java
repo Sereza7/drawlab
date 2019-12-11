@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap ;
 
 import login.Login;
-import main.ZoneDeDessin;
+import zonesDeDessin.ZoneDeDessinEnfant;
 
 //---------------------------------------------------------------------
 // classe permettant de recevoir des messages diffusés à une adresse (en multicast)
@@ -21,7 +21,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 	private transient DatagramSocket socketReception ;
 
 	// l'éditeur local qu'on préviendra suite aux messages reçus
-	private ZoneDeDessin clientLocal ;
+	private ZoneDeDessinEnfant clientLocal ;
 	private Login loginLocal;
 
 	// les données à récupérer conformément au format des données envoyées :
@@ -43,9 +43,9 @@ public class RecepteurUnicast extends Thread implements Runnable {
 		}
 	}
 	
-	public void setClientLocal (ZoneDeDessin clientLocal) {
-		this.clientLocal = clientLocal ;
-		System.out.println(clientLocal);
+	public void setClientLocal (ZoneDeDessinEnfant zoneDeDessinEnfant) {
+		this.clientLocal = zoneDeDessinEnfant ;
+		System.out.println(zoneDeDessinEnfant);
 	}
 	public void setLoginLocal (Login login) {
 		this.loginLocal = login ;
