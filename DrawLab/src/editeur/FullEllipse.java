@@ -1,4 +1,4 @@
-package main;
+package editeur;
 
 import java.awt.Graphics;
 import java.rmi.RemoteException;

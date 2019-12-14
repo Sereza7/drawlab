@@ -3,6 +3,7 @@ package main;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import editeur.Dessin;
 import serveur.RemoteDessinServeur;
 
 public interface CreateurDessin extends Serializable{

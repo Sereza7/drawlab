@@ -9,8 +9,9 @@ import java.net.InetAddress ;
 import java.rmi.RemoteException;
 import java.util.HashMap ;
 
+import editeur.ZoneDeDessin;
 import login.Login;
-import main.ZoneDeDessin;
+import main.ClientLocal;
 
 //---------------------------------------------------------------------
 // classe permettant de recevoir des messages diffusés à une adresse (en multicast)
@@ -21,7 +22,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 	private transient DatagramSocket socketReception ;
 
 	// l'éditeur local qu'on préviendra suite aux messages reçus
-	private ZoneDeDessin clientLocal ;
+	private ClientLocal clientLocal ;
 	private Login loginLocal;
 
 	// les données à récupérer conformément au format des données envoyées :
@@ -43,7 +44,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 		}
 	}
 	
-	public void setClientLocal (ZoneDeDessin clientLocal) {
+	public void setClientLocal (ClientLocal clientLocal) {
 		this.clientLocal = clientLocal ;
 		System.out.println(clientLocal);
 	}
@@ -80,11 +81,11 @@ public class RecepteurUnicast extends Thread implements Runnable {
 			if (command.equals ("Bounds")) {
 				//System.out.println ("received Bounds") ;
 				// mise à jour des limites d'un dessin
-				clientLocal.objectUpdateBounds(name, (int)hm.get ("x"), (int)hm.get ("y"), (int)hm.get ("w"), (int)hm.get ("h"));
+				clientLocal.dessinUpdateBounds(name, (int)hm.get ("x"), (int)hm.get ("y"), (int)hm.get ("w"), (int)hm.get ("h"));
 			} else if (command.equals ("Location")) {
 				//System.out.println ("received Location") ;
 				// mise à jour de la positiuon d'un dessin
-				clientLocal.objectUpdateLocation (name, (int)hm.get ("x"), (int)hm.get ("y"));
+				clientLocal.dessinUpdateLocation (name, (int)hm.get ("x"), (int)hm.get ("y"));
 			} else if (command.equals ("Dessin")) {
 				//System.out.println ("received Dessin") ;
 				// ajout d'un dessin
@@ -94,7 +95,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 					e.printStackTrace();
 				}
 			} else if (command.equals("ZOrder")) {
-				clientLocal.objectUpdateZOrder(name, (int)hm.get("z"));
+				clientLocal.dessinUpdateZOrder(name, (int)hm.get("z"));
 			}
 			else if (command.equals("SupprimerDessin")) {
 				try {

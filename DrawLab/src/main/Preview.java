@@ -5,6 +5,8 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 
+import editeur.Dessin;
+
 public class Preview extends JPanel{
 	
 	/**

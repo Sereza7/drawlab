@@ -1,4 +1,6 @@
-package main ;
+package editeur ;
+
+import main.ClientLocal;
 
 public class MainEditeurClient {
 
@@ -21,7 +23,8 @@ public class MainEditeurClient {
 		System.out.println ("port rmi du serveur : " + portRMIServeur) ;
 		System.out.println ("nom de l'univers partagé : " + nomEditeurCollaboratif) ;
 		// instanciation d'un client déporté qui fera le lien avec le navigateur
-		new Editeur (nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur) ;
+		
+		new Editeur (new ClientLocal(nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur).getServeur()) ;
 
 	}
 

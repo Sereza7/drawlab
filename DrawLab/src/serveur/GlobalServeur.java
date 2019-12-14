@@ -143,9 +143,6 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	}
 	
 	// méthodes permettant d'ajouter un nouveau profil dans le système
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#addProfil(int, main.Profil.ProfilType, java.lang.String)
-	 */
 	@Override
 	public synchronized RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username) throws RemoteException {
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au profil
@@ -164,20 +161,18 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	}
 	
 	public synchronized RemoteSessionServeur addSession ( RemoteProfilServeur utilisateur) throws RemoteException {
-		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au profil
-		// et création d'un nouveau profil de ce nom et associé également à un émetteur multicast...
-		// attention : la classe Profil utilisée ici est celle du package serveur (et pas celle du package client)
 		RemoteSessionServeur session = new SessionServeur("profil" + nextId (), emetteurs, utilisateur.getDefaultParameters(), utilisateur) ;
 		// enregistrement du session pour accès rmi distant
 		registerSession (session) ;
 		// ajout du session dans la liste des dessins pour accès plus efficace au dessin
 		sharedSessions.put (session.getName (), session) ;
 		System.out.println ("addSession : sharedSessions = " + sharedSessions) ;
-		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
+		// renvoi du session à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteSession
 		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
 		System.out.println(session);
 		return  session;
 	}
+	
 	// méthode permettant d'accéder à un proxy d'un des dessins
 	@Override
 	public synchronized RemoteDessinServeur getDessin (String name) throws RemoteException {
@@ -211,9 +206,6 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	
 	// méthode qui incrémente le compteur de dessins pour avoir un id unique pour chaque dessin :
 	// dans une version ultérieure avec récupération de dessins à aprtir d'une sauvegarde, il faudra également avoir sauvegardé ce nombre...
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#nextId()
-	 */
 	public int nextId () {
 		idDessin++ ; 
 		return idDessin ; 
@@ -240,9 +232,6 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	// on utilise une valeur arbitraitre de port qu'on incrémente de 1 à chaque arrivée d'un nouveau client
 	// cela permettra d'avoir plusieurs clients sur la même machine, chacun avec un canal de communication distinct
 	// sur un port différent des autres clients
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#getPortEmission(java.net.InetAddress)
-	 */
 	@Override
 	public int getPortEmission (InetAddress adresseClient) throws RemoteException {
 		EmetteurUnicast emetteur = new EmetteurUnicast (adresseClient, portEmission++) ;
@@ -251,9 +240,6 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	}
 
 	// méthode permettant juste de vérifier que le serveur est lancé
-	/* (non-Javadoc)
-	 * @see serveur.RemoteGlobalServer#answer(java.lang.String)
-	 */
 	@Override
 	public void answer (String question) throws RemoteException {
 		System.out.println ("SERVER : the question was : " + question) ;   
