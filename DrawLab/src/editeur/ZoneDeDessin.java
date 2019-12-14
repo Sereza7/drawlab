@@ -13,13 +13,13 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import communication.RecepteurUnicast;
 import main.CreateurDessin;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
@@ -39,12 +39,6 @@ public class ZoneDeDessin extends JPanel{
 	private DessinListener aRL;
 	private DessinMotionListener aRML;
 	private SelectListener aSL;
-	
-	// le Thread pour pouvoir recevoir des mises à jour en provenance du serveur
-	private Thread threadReceiver ;
-	
-	// le récepteur de messages diffusés aux abonnés
-	private RecepteurUnicast recepteurUnicast ;
 	
 	// le serveur distant qui centralise toutes les informations
 	private RemoteGlobalServeur serveur ;
@@ -68,7 +62,21 @@ public class ZoneDeDessin extends JPanel{
 	
 	ZoneDeDessin(RemoteGlobalServeur serveur){
 		super();
-		this.serveur=serveur;
+		this.serveur=serveur;	
+		try {
+			ArrayList<RemoteDessinServeur>  remoteDessins = serveur.getSharedDessins();
+			for (RemoteDessinServeur rd : remoteDessins) {
+				ajouterDessin (rd, rd.getName (), rd.getX (), rd.getY (), rd.getWidth(), rd. getHeight ()) ;
+			}
+			for (RemoteDessinServeur rd : remoteDessins) {
+				this.setComponentZOrder(dessins.get(rd.getName()), rd.getZ());
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		
 		setBackground(Color.white);
 		setForeground(Color.blue);
