@@ -1,8 +1,6 @@
-package editeurs ;
+package main ;
 
-import main.ClientLocal;
-
-public class MainEditeurClient {
+public class MainClient {
 
 	// main permettant de lancer un éditeur local 
 	public static void main (String [] args) {
