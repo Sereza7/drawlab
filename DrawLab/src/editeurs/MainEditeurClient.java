@@ -1,4 +1,4 @@
-package editeur ;
+package editeurs ;
 
 import main.ClientLocal;
 

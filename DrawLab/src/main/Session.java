@@ -2,7 +2,7 @@ package main;
 
 import java.rmi.RemoteException;
 
-import editeur.Editeur;
+import editeurs.Editeur;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
 

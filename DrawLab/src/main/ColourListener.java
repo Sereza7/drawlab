@@ -5,7 +5,7 @@ import javax.swing.JColorChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import editeur.ZoneDeDessin;
+import editeurs.ZoneDeDessin;
 
 public class ColourListener implements ChangeListener{
 	

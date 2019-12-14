@@ -44,7 +44,7 @@ public class ClientLocal {
 			// tentative de connexion au serveur distant
 			serveur = (RemoteGlobalServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
 			// invocation d'une ptremière méthode juste pour test
-			serveur.answer ("hello from " + getName ()) ;
+			serveur.answer ("hello from " + getName()) ;
 			// récupération de tous les dessins déjà présents sur le serveur
 			
 		} catch (Exception e) {

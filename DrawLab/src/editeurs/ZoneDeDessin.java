@@ -1,4 +1,4 @@
-package editeur;
+package editeurs;
 
 import java.awt.AWTException;
 import java.awt.Color;

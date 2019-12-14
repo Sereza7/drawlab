@@ -9,7 +9,7 @@ import java.net.InetAddress ;
 import java.rmi.RemoteException;
 import java.util.HashMap ;
 
-import editeur.ZoneDeDessin;
+import editeurs.ZoneDeDessin;
 import login.Login;
 import main.ClientLocal;
 

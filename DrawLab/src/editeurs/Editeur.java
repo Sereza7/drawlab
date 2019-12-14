@@ -28,7 +28,8 @@ import main.CreateurRectanglePlein;
 import main.Preview;
 import main.PreviewListener;
 import main.ShapeListener;
-import main.ZoneDeDessin;
+import serveur.RemoteGlobalServeur;
+
 import javax.swing.border.BevelBorder;
 
 public class Editeur extends JFrame {
@@ -44,10 +45,10 @@ public class Editeur extends JFrame {
 	private ZoneDeDessin zone ;
 	
 	
-	public Editeur(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
+	public Editeur(RemoteGlobalServeur serveur) {
 		super();
 		
-		zone = new ZoneDeDessin(clientName, serveurName, serverHostName, serverRMIPort);
+		zone = new ZoneDeDessin(serveur);
 		zone.setCd(new CreateurRectangle());
 		
 		
@@ -183,5 +184,8 @@ public class Editeur extends JFrame {
 		setVisible(true);
 		preview.setDessin(zone.getCd(), zone.getForeground());
 		
+	}
+	public ZoneDeDessin getZdd() {
+		return zone;
 	}
 }
