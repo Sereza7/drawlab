@@ -1,4 +1,4 @@
-package main;
+package editeurs;
 
 import java.awt.AWTException;
 import java.awt.Color;
@@ -12,9 +12,6 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +20,9 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import communication.RecepteurUnicast;
+import main.CreateurDessin;
 import serveur.RemoteDessinServeur;
-import serveur.RemoteEditeurServeur;
+import serveur.RemoteGlobalServeur;
 
 public class ZoneDeDessin extends JPanel{
 	
@@ -43,14 +40,8 @@ public class ZoneDeDessin extends JPanel{
 	private DessinMotionListener aRML;
 	private SelectListener aSL;
 	
-	// le Thread pour pouvoir recevoir des mises à jour en provenance du serveur
-	private Thread threadReceiver ;
-	
-	// le récepteur de messages diffusés aux abonnés
-	private RecepteurUnicast recepteurUnicast ;
-	
 	// le serveur distant qui centralise toutes les informations
-	private RemoteEditeurServeur serveur ;
+	private RemoteGlobalServeur serveur ;
 	
 	// le nom de l'éditeur local
 	protected String name ;
@@ -69,46 +60,24 @@ public class ZoneDeDessin extends JPanel{
 	// - mais elle va permettre d'accéder plus rapidement à un Dessin à partir de son nom
 	private HashMap<String, Dessin> dessins = new HashMap<String, Dessin> () ;
 	
-	public ZoneDeDessin(final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort){
+	ZoneDeDessin(RemoteGlobalServeur serveur){
 		super();
+		this.serveur=serveur;	
 		try {
-			// tentative de connexion au serveur distant
-			serveur = (RemoteEditeurServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
-			// invocation d'une ptremière méthode juste pour test
-			serveur.answer ("hello from " + getName ()) ;
-			// récupération de tous les dessins déjà présents sur le serveur
-			ArrayList<RemoteDessinServeur> remoteDessins = serveur.getSharedDessins() ;
-			// ajout de tous les dessins dans la zone de dessin
+			ArrayList<RemoteDessinServeur>  remoteDessins = serveur.getSharedDessins();
 			for (RemoteDessinServeur rd : remoteDessins) {
 				ajouterDessin (rd, rd.getName (), rd.getX (), rd.getY (), rd.getWidth(), rd. getHeight ()) ;
 			}
 			for (RemoteDessinServeur rd : remoteDessins) {
 				this.setComponentZOrder(dessins.get(rd.getName()), rd.getZ());
 			}
-		} catch (Exception e) {
-			System.out.println ("probleme liaison CentralManager") ;
-			e.printStackTrace () ;
-			System.exit (1) ;
-		}
-		try {
-			// création d'un récepteur unicast en demandant l'information de numéro port au serveur
-			// en même temps on transmet au serveur l'adresse IP de la machine du client au serveur
-			// de façon à ce que ce dernier puisse par la suite envoyer des messages de mise à jour à ce récepteur 
-			recepteurUnicast = new RecepteurUnicast (InetAddress.getByName (clientName), serveur.getPortEmission (InetAddress.getByName (clientName))) ;
-			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
-			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
-			// et qu'on ne sait pas laquelle sera retournée par InetAddress.getLocalHost ()...
-			//recepteurUnicast = new RecepteurUnicast (serveur.getPortEmission (InetAddress.getLocalHost ())) ;
-			recepteurUnicast.setClientLocal (this) ;
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
-		} catch (UnknownHostException e) {
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// création d'un Thread pour pouvoir recevoir les messages du serveur en parallèle des interactions avec les dessins
-		threadReceiver = new Thread (recepteurUnicast) ;
-		// démarrage effectif du Thread
-		threadReceiver.start () ;
+		
+		
+		
 		setBackground(Color.white);
 		setForeground(Color.blue);
 		getForeground();

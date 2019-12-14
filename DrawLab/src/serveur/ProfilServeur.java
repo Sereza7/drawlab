@@ -20,10 +20,12 @@ public class ProfilServeur extends UnicastRemoteObject implements RemoteProfilSe
 	int classement;
 	String username;
 	String name;
+	Parametres defaultparameters;
 
 	// un attribut permettant au Dessin de diffuser directement ses mises à jour, sans passer par le serveur associé
 	// - cet attribut n'est pas Serializable, du coup on le déclare transient pour qu'il ne soit pas inclu dans la sérialisation
 	protected transient List<EmetteurUnicast> emetteurs ;
+	
 
 	
 	public void setEmetteurs (List<EmetteurUnicast> emetteurs) {
@@ -104,6 +106,11 @@ public class ProfilServeur extends UnicastRemoteObject implements RemoteProfilSe
 			sender.diffuseMessage ("SupprimerProfil", getName (), hm) ;
 		}
 		
+	}
+
+	@Override
+	public Parametres getDefaultParameters() throws RemoteException {
+		return this.defaultparameters;
 	}
 
 

@@ -2,6 +2,8 @@ package main;
 
 import java.rmi.RemoteException;
 
+import editeurs.Dessin;
+import editeurs.Ellipse;
 import serveur.RemoteDessinServeur;
 
 public class CreateurEllipse implements CreateurDessin{

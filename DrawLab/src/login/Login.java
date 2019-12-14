@@ -26,6 +26,7 @@ import communication.RecepteurUnicast;
 import main.Profil;
 import main.Profil.ProfilType;
 import serveur.RemoteEditeurServeur;
+import serveur.RemoteGlobalServeur;
 import serveur.RemoteProfilServeur;
 
 
@@ -38,7 +39,7 @@ public class Login extends JFrame {
 	Font fontLabel = new Font("Arial",Font.PLAIN,32);
 	Font fontButton = new Font("Arial",Font.PLAIN,20);
 	
-	private RemoteEditeurServeur serveur;
+	private RemoteGlobalServeur serveur;
 	private RecepteurUnicast recepteurUnicast;
 	private Thread threadReceiver;
 	private HashMap<String, Profil> profils = new HashMap<String, Profil> () ;
@@ -55,7 +56,7 @@ public class Login extends JFrame {
 	public void init (final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
 		try {
 			// tentative de connexion au serveur distant
-			serveur = (RemoteEditeurServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
+			serveur = (RemoteGlobalServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
 			
 			// invocation d'une ptremière méthode juste pour test
 			serveur.answer ("hello from " + getName ()) ;

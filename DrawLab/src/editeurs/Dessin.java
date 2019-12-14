@@ -1,4 +1,4 @@
-package main;
+package editeurs;
 
 import java.awt.Color;
 import java.awt.Cursor;

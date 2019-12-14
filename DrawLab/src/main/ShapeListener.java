@@ -3,6 +3,8 @@ package main;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import editeurs.ZoneDeDessin;
+
 public class ShapeListener implements ItemListener{
 	
 	CreateurDessin cd;

@@ -2,6 +2,8 @@ package main;
 
 import java.rmi.RemoteException;
 
+import editeurs.Dessin;
+import editeurs.FullRectangle;
 import serveur.RemoteDessinServeur;
 
 public class CreateurRectanglePlein implements CreateurDessin{
