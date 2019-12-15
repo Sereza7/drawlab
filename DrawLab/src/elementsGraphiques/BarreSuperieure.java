@@ -38,7 +38,6 @@ public class BarreSuperieure extends JPanel{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
 		scaledImage = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
 		picLabelLogo = new JLabel(new ImageIcon(scaledImage));
 		picLabelLogo.setBackground(Color.WHITE);
