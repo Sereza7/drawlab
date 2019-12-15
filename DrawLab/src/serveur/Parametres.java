@@ -1,8 +1,13 @@
 package serveur;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Parametres {
+public class Parametres implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int initialTimerLength;
 	ArrayList<String> words;
 	

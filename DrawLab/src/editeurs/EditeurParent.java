@@ -11,7 +11,7 @@ public class EditeurParent extends Editeur {
 
 	public EditeurParent(RemoteGlobalServeur serveur, String dessinADeviner) {
 		super(serveur);
-		super.topText.setText("Draw a "+dessinADeviner);
+		super.topBar.setTopText("Draw a "+dessinADeviner);
 		
 	}
 

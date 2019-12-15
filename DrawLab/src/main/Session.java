@@ -1,16 +1,59 @@
 package main;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import editeurs.Editeur;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
 
-public class Session {
+public class Session{
 	private Editeur editeur;
-	public Session(RemoteGlobalServeur serveur) {
-		this.editeur= new Editeur(serveur);
+	private RemoteGlobalServeur serveur;
+	private ArrayList<Profil> users;
+	private boolean enCours;
+	
+	private ArrayList<ProfilListener>profilListeners;
+
+	
+	public Session(RemoteGlobalServeur serveur, Profil profil) {
+		this.serveur=serveur;
+		this.editeur=null;
+		this.users= new ArrayList<Profil>();
+		this.users.add(profil);
+		this.profilListeners= new ArrayList<ProfilListener>();
 	}
+	
+	public void addProfilListener(ProfilListener profilListener){
+		this.profilListeners.add(profilListener);
+	}
+	
+	public void addUser(Profil profil) {
+		//adds locally a user in the session
+		this.users.add(profil);
+		for (ProfilListener profilListener : profilListeners)
+			profilListener.addedUser(profil);
+	}
+	public void removeUser(Profil profil) {
+		//removes locally a user from the session
+		this.users.remove(profil);
+		for (ProfilListener profilListener : profilListeners)
+			profilListener.removedUser(profil);
+	}
+	public ArrayList<Profil> getUsers(){
+		return users;
+	}
+	
+	public void launchEditeur() {
+		this.editeur= new Editeur(serveur);
+		this.setEnCours(true);
+	}
+	
+	private void setEnCours(boolean b) {
+		this.enCours=b;
+		
+	}
+
 	public void saveImage() {
 		// TODO Auto-generated method stub
 		this.editeur.getZdd().saveImage();
@@ -27,6 +70,7 @@ public class Session {
 
 	public void ajouterDessin(String proxyName, int x, int y, int w, int h) {
 		try {
+			System.out.println(this.editeur);
 			this.editeur.getZdd().ajouterDessin(proxyName, x,y, w,h);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

@@ -20,4 +20,8 @@ public interface RemoteProfilServeur extends Remote{
 
 	void supprimer() throws RemoteException;
 
+	boolean isLoggedOn() throws RemoteException;
+
+	void setLoggedOn(boolean b) throws RemoteException;
+
 }

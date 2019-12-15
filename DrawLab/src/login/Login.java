@@ -5,11 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -22,10 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import communication.RecepteurUnicast;
+import main.Accueil;
+import main.ClientLocal;
 import main.Profil;
 import main.Profil.ProfilType;
-import serveur.RemoteEditeurServeur;
+import serveur.Parametres;
 import serveur.RemoteGlobalServeur;
 import serveur.RemoteProfilServeur;
 
@@ -39,60 +36,22 @@ public class Login extends JFrame {
 	Font fontLabel = new Font("Arial",Font.PLAIN,32);
 	Font fontButton = new Font("Arial",Font.PLAIN,20);
 	
-	private RemoteGlobalServeur serveur;
-	private RecepteurUnicast recepteurUnicast;
-	private Thread threadReceiver;
 	private HashMap<String, Profil> profils = new HashMap<String, Profil> () ;
+	private JTextField username;
+	private JCheckBox cbParent;
+	private ClientLocal clientLocal; 
 	
-	public Login (final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
+	public Login (ClientLocal clientLocal) {
 		setDefaultLookAndFeelDecorated(true);
 		setTitle("DrawLab");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1034, 636);
-		init(clientName, serveurName, serverHostName, serverRMIPort);
+		init(clientLocal);
 		setVisible (true) ;
 	}
 	
-	public void init (final String clientName, final String serveurName, final String serverHostName, final int serverRMIPort) {
-		try {
-			// tentative de connexion au serveur distant
-			serveur = (RemoteGlobalServeur)Naming.lookup ("//" + serverHostName + ":" + serverRMIPort + "/" + serveurName) ;
-			
-			// invocation d'une ptremière méthode juste pour test
-			serveur.answer ("hello from " + getName ()) ;
-			// récupération de tous les dessins déjà présents sur le serveur
-			ArrayList<RemoteProfilServeur> remoteProfils = serveur.getSharedProfils() ;
-			for (RemoteProfilServeur rd : remoteProfils) {
-				ajouterProfil(rd.getName (), rd) ;
-			}
-		} catch (Exception e) {
-			System.out.println ("probleme liaison CentralManager") ;
-			e.printStackTrace () ;
-			System.exit (1) ;
-		}
-		try {
-			// création d'un récepteur unicast en demandant l'information de numéro port au serveur
-			// en même temps on transmet au serveur l'adresse IP de la machine du client au serveur
-			// de façon à ce que ce dernier puisse par la suite envoyer des messages de mise à jour à ce récepteur 
-			recepteurUnicast = new RecepteurUnicast (InetAddress.getByName (clientName), serveur.getPortEmission (InetAddress.getByName (clientName))) ;
-			// on aimerait bien demander automatiquement quel est l'adresse IP de la machine du client,
-			// mais le problème est que celle-ci peut avoir plusieurs adresses IP (filaire, wifi, ...)
-			// et qu'on ne sait pas laquelle sera retournée par InetAddress.getLocalHost ()...
-			//recepteurUnicast = new RecepteurUnicast (serveur.getPortEmission (InetAddress.getLocalHost ())) ;
-			recepteurUnicast.setLoginLocal (this) ;
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		// création d'un Thread pour pouvoir recevoir les messages du serveur en parallèle des interactions avec les dessins
-		threadReceiver = new Thread (recepteurUnicast) ;
-		// démarrage effectif du Thread
-		threadReceiver.start () ;
-		
-		
-		
-		
+	public void init (ClientLocal clientLocal) {
+		this.clientLocal=clientLocal;
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -110,7 +69,7 @@ public class Login extends JFrame {
 		passwordLabel.setBounds(311, 375, 200, 40);
 		passwordLabel.setFont(fontLabel);
 		panel.add(passwordLabel);
-		JTextField username = new JTextField();
+		username = new JTextField();
 		username.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {				
@@ -127,7 +86,7 @@ public class Login extends JFrame {
 		username.setFont(fontButton);
 		panel.add(username);
 		
-		JCheckBox cbParent = new JCheckBox("Parent");
+		cbParent = new JCheckBox("Parent");
 		cbParent.setBounds(768, 325, 114, 42);
 		cbParent.setFont(fontButton);
 		panel.add(cbParent);
@@ -141,24 +100,8 @@ public class Login extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				boolean alreadyInUse = false;
-				for (Profil profilIter: profils.values()) {
-					if (profilIter.getUserName().equals(username.getText())) {
-						alreadyInUse=true;
-					}
+				registerAction();
 				}
-				if (!alreadyInUse) {
-					try {
-						serveur.addProfil(0, cbParent.isSelected() ? ProfilType.ADULTE : ProfilType.ENFANT, username.getText());
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				else {
-					System.out.println("This username is already taken.");
-				}
-			}
 		});
 		register.setBounds(381, 458, 130, 60);
 		register.setFont(fontButton);
@@ -166,14 +109,20 @@ public class Login extends JFrame {
 		JButton signIn= new JButton("Sign In");
 
 
-		LoginListener loginListener = new LoginListener(this, username);
-		signIn.addActionListener(loginListener);
+		signIn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loginAction();
+				}
+		});
 		signIn.setBounds(559, 458, 130, 60);
 		signIn.setFont(fontButton);
 		panel.add(signIn);
 		
 		getContentPane().add(panel);
 	}
+		
 	
 	public static void main (String[] args) {
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -193,7 +142,8 @@ public class Login extends JFrame {
 		System.out.println ("port rmi du serveur : " + portRMIServeur) ;
 		System.out.println ("nom de l'univers partagé : " + nomEditeurCollaboratif) ;
 		// instanciation d'un client déporté qui fera le lien avec le navigateur
-		Login login = new Login (nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur);
+		
+		new ClientLocal (nomMachineClient, nomEditeurCollaboratif, nomMachineServeur, portRMIServeur);
 	}
 	
 
@@ -218,7 +168,7 @@ public class Login extends JFrame {
 			// ajout du dessin
 			RemoteProfilServeur proxy=null;
 			try {
-				proxy = serveur.getProfil(proxyName);
+				proxy = clientLocal.getServeur().getProfil(proxyName);
 			}catch(RemoteException e) {
 				e.printStackTrace();
 			}
@@ -228,5 +178,56 @@ public class Login extends JFrame {
 		} else {
 			System.out.println ("profil " + proxyName + " était déjà présent") ;
 		}
-	};
+	}
+	public void loginAction() {
+		boolean alreadyInUse = false;
+		RemoteProfilServeur proxy = null;
+		for (Profil profilIter: profils.values()) {
+			if (profilIter.getUserName().equals(username.getText())) {
+				alreadyInUse=true;
+				proxy = profilIter.proxy;
+			}
+		}
+		if (alreadyInUse) {
+			try {
+				if (!proxy.isLoggedOn()) {
+					proxy.setLoggedOn(true);
+					
+					new Accueil(clientLocal, proxy);
+					
+					this.dispose();
+				}
+				else {
+					System.out.println("This profile is already used by another client. Please change your profile or close this other client.");
+				}
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else {
+			System.out.println("This username is not registered. Please register before loging in.");
+			
+		}
+	}
+	public void registerAction() {
+		boolean alreadyInUse = false;
+		for (Profil profilIter: profils.values()) {
+			if (profilIter.getUserName().equals(username.getText())) {
+				alreadyInUse=true;
+			}
+		}
+		if (!alreadyInUse) {
+			try {
+				clientLocal.getServeur().addProfil(0, cbParent.isSelected() ? ProfilType.ADULTE : ProfilType.ENFANT, username.getText(), new Parametres());
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		else {
+			System.out.println("This username is already taken.");
+		}
+	}
 }
+

@@ -22,6 +22,8 @@ public interface RemoteSessionServeur extends Remote{
 	void setParametres(Parametres parametres) throws RemoteException;
 
 	void addUtilisateur(ProfilServeur utilisateur) throws RemoteException;
+	
+	void removeUtilisateur(ProfilServeur utilisateur) throws RemoteException;
 
 	void supprimer() throws RemoteException;
 

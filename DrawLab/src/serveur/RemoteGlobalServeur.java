@@ -15,7 +15,7 @@ public interface RemoteGlobalServeur extends Remote{
 	RemoteDessinServeur addDessin(int x, int y, int w, int h, CreateurDessin cd, Color color) throws RemoteException;
 
 	// méthodes permettant d'ajouter un nouveau profil dans le système
-	RemoteProfilServeur addProfil(int ranking, ProfilType type, String username) throws RemoteException;
+	RemoteProfilServeur addProfil(int ranking, ProfilType type, String username, Parametres parametres) throws RemoteException;
 
 	// méthode permettant d'accéder à un proxy d'un des dessins
 	RemoteDessinServeur getDessin(String name) throws RemoteException;

@@ -25,6 +25,7 @@ public class ProfilServeur extends UnicastRemoteObject implements RemoteProfilSe
 	// un attribut permettant au Dessin de diffuser directement ses mises à jour, sans passer par le serveur associé
 	// - cet attribut n'est pas Serializable, du coup on le déclare transient pour qu'il ne soit pas inclu dans la sérialisation
 	protected transient List<EmetteurUnicast> emetteurs ;
+	private boolean isLoggedOn;
 	
 
 	
@@ -35,15 +36,19 @@ public class ProfilServeur extends UnicastRemoteObject implements RemoteProfilSe
 	private static final long serialVersionUID = 1L ;
 
 	// constructeur du Dessin sur le serveur : il diffuse alors qu'il faut créer un nouveau dessin sur tous les clients 
-	public ProfilServeur (String name, List<EmetteurUnicast> senders, int ranking, ProfilType type, String username) throws RemoteException {
+	public ProfilServeur (String name, List<EmetteurUnicast> senders, int ranking, ProfilType type, String username, Parametres parametres) throws RemoteException {
 		this.emetteurs = senders ;
 		this.type = type ;
 		this.name=name;
 		this.username = username;
 		this.classement = ranking;
+		this.defaultparameters=parametres;
+		this.isLoggedOn=false;
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		hm.put ("type", this.type) ;
 		hm.put ("classement", new Integer(this.classement)) ;
+		hm.put ("parametres",this.defaultparameters) ;
+		hm.put ("isloggedon", this.isLoggedOn) ;
 		
 		for (EmetteurUnicast sender : senders) {
 			sender.diffuseMessage ("Profil", getName(), hm) ;
@@ -111,6 +116,17 @@ public class ProfilServeur extends UnicastRemoteObject implements RemoteProfilSe
 	@Override
 	public Parametres getDefaultParameters() throws RemoteException {
 		return this.defaultparameters;
+	}
+
+	@Override
+	public boolean isLoggedOn() throws RemoteException {
+		return isLoggedOn;
+	}
+
+	@Override
+	public void setLoggedOn(boolean b) throws RemoteException {
+		this.isLoggedOn=b;
+		
 	}
 
 

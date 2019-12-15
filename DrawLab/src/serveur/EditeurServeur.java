@@ -125,11 +125,11 @@ public class EditeurServeur extends UnicastRemoteObject implements RemoteEditeur
 	}
 	
 	// méthodes permettant d'ajouter un nouveau profil dans le système
-	public synchronized RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username) throws RemoteException {
+	public synchronized RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username, Parametres parametres) throws RemoteException {
 		// création d'un nouveau nom, unique, destiné à servir de clé d'accès au profil
 		// et création d'un nouveau profil de ce nom et associé également à un émetteur multicast...
 		// attention : la classe Profil utilisée ici est celle du package serveur (et pas celle du package client)
-		RemoteProfilServeur profil = new ProfilServeur ("profil" + nextId (), emetteurs,  ranking,  type, username) ;
+		RemoteProfilServeur profil = new ProfilServeur ("profil" + nextId (), emetteurs,  ranking,  type, username, parametres) ;
 		// enregistrement du profil pour accès rmi distant
 		registerProfil (profil) ;
 		// ajout du profil dans la liste des dessins pour accès plus efficace au dessin

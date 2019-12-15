@@ -103,12 +103,21 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 	 */
 	@Override
 	public void addUtilisateur (ProfilServeur utilisateur) throws RemoteException {
-		//System.out.println (getName() + " setBounds : " + x + " " + y + " " + w + " " + h) ;
 		this.utilisateurs.put(utilisateur.getName(),utilisateur);
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		hm.put ("utilisateur", utilisateur) ;
 		for (EmetteurUnicast sender : emetteurs) {
 			sender.diffuseMessage ("AddUserSession", getName (), hm) ;
+		}
+	}
+	
+	public void removeUtilisateur (ProfilServeur utilisateur) throws RemoteException {
+		this.utilisateurs.remove(utilisateur.getName());
+		HashMap<String, Object> hm = new HashMap <String, Object> () ;
+		hm.put("session", this);
+		hm.put ("utilisateur", utilisateur) ;
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("RemoveUserSession", getName (), hm) ;
 		}
 	}
 
