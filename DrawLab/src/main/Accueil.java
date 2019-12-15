@@ -2,25 +2,25 @@ package main;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
+
+import main.Profil.ProfilType;
 
 public class Accueil extends JFrame {
 	
 	private String username;
-	private int type;
+	private Profil profil;
+	private ProfilType profilType;
 	private Font fontLabel = new Font("Arial", Font.PLAIN, 40);
 
-	public Accueil (String username, int type) {
+	public Accueil (String username, ProfilType profilType) {
 		this.username = username;
-		this.type = type;
+		this.profilType = profilType;
 
 		setDefaultLookAndFeelDecorated(true);
 		setTitle("DrawLab");
