@@ -3,28 +3,20 @@ package editeurs;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-
 import main.ColourListener;
-import main.CreateurDessin;
-import main.CreateurEllipse;
-import main.CreateurEllipsePleine;
 import main.CreateurRectangle;
-import main.CreateurRectanglePlein;
 import main.Preview;
 import main.PreviewListener;
-import main.ShapeListener;
 import zonesDeDessin.ZoneDeDessin;
-import elementsGraphiques.TopBar;
+import elementsGraphiques.BarreOutils;
+import elementsGraphiques.BarreSuperieure;
 
 public class Editeur extends JFrame {
 	
 	private Preview preview;
-	private final ButtonGroup shapeGroup = new ButtonGroup();
 	private static final long serialVersionUID = 1L ;
 	
 	
@@ -44,37 +36,10 @@ public class Editeur extends JFrame {
 		this.setSize(1300,800);
 		getContentPane().add(zone, BorderLayout.CENTER);
 		
-		Box verticalBox = Box.createVerticalBox();
-		getContentPane().add(verticalBox, BorderLayout.WEST);
+		BarreOutils barreOutils= new BarreOutils(zone);
+		getContentPane().add(barreOutils, BorderLayout.WEST);
 		
-		JRadioButton rdbtnRectangle = new JRadioButton("Rectangle");
-		shapeGroup.add(rdbtnRectangle);
-		rdbtnRectangle.setSelected(true);
-		verticalBox.add(rdbtnRectangle);
-		CreateurDessin createurRectangle = new CreateurRectangle();
-		ShapeListener rectangleListener = new ShapeListener(createurRectangle, zone);
-		rdbtnRectangle.addItemListener(rectangleListener);
 		
-		JRadioButton rdbtnRectanglePlein = new JRadioButton("Rectangle plein");
-		shapeGroup.add(rdbtnRectanglePlein);
-		verticalBox.add(rdbtnRectanglePlein);
-		CreateurDessin createurRectanglePlein = new CreateurRectanglePlein();
-		ShapeListener rectanglePleinListener = new ShapeListener(createurRectanglePlein, zone);
-		rdbtnRectanglePlein.addItemListener(rectanglePleinListener);
-		
-		JRadioButton rdbtnEllipse = new JRadioButton("Ellipse");
-		shapeGroup.add(rdbtnEllipse);
-		verticalBox.add(rdbtnEllipse);
-		CreateurDessin createurEllipse = new CreateurEllipse();
-		ShapeListener ellipseListener = new ShapeListener(createurEllipse, zone);
-		rdbtnEllipse.addItemListener(ellipseListener);
-		
-		JRadioButton rdbtnEllipsePleine = new JRadioButton("Ellipse pleine");
-		shapeGroup.add(rdbtnEllipsePleine);
-		verticalBox.add(rdbtnEllipsePleine);
-		CreateurDessin createurEllipsePleine = new CreateurEllipsePleine();
-		ShapeListener ellipsePleineListener = new ShapeListener(createurEllipsePleine, zone);
-		rdbtnEllipsePleine.addItemListener(ellipsePleineListener);
 		
 		Box verticalBox_1 = Box.createVerticalBox();
 		getContentPane().add(verticalBox_1, BorderLayout.EAST);
@@ -95,7 +60,7 @@ public class Editeur extends JFrame {
 		colourChooser.getSelectionModel().addChangeListener((new ColourListener(colourChooser, zone)));
 		zone.addPropertyChangeListener(new PreviewListener(preview));
 		
-		TopBar topBar = new TopBar("What are they drawing?");
+		BarreSuperieure topBar = new BarreSuperieure("What are they drawing?");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
 		setVisible(true);

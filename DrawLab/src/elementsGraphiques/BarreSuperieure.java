@@ -14,14 +14,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-public class TopBar extends JPanel{
+public class BarreSuperieure extends JPanel{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public TopBar(String titre) {
+	public BarreSuperieure(String titre) {
 		this.setBackground(Color.WHITE);
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
