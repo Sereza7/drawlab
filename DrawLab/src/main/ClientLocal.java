@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 
 
 import communication.RecepteurUnicast;
+import login.Login;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
 
@@ -72,8 +73,8 @@ public class ClientLocal {
 		// démarrage effectif du Thread
 		threadReceiver.start ();
 
-		this.session= new Session(serveur);
-		
+		System.out.println("serveur"+serveur.toString());
+		recepteurUnicast.setLoginLocal(new Login(this));
 		
 		
 	}
@@ -85,7 +86,7 @@ public class ClientLocal {
 	}
 
 	// méthode d'ajout d'un dessin : factorisation de code
-	public void ajouterDessin (RemoteDessinServeur proxy, String proxyName, int x, int y, int w, int h) throws RemoteException {
+	public synchronized void ajouterDessin (RemoteDessinServeur proxy, String proxyName, int x, int y, int w, int h) throws RemoteException {
 		this.session.ajouterDessin(proxy, proxyName, x, y, w, h);
 	}
 	
@@ -128,6 +129,9 @@ public class ClientLocal {
 	}
 	public RemoteGlobalServeur getServeur() {
 		return this.serveur;
+	}
+	public void setSession(Session session) {
+		this.session=session;
 	}
 
 }

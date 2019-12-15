@@ -20,7 +20,7 @@ public interface RemoteEditeurServeur extends Remote {
    void answer (String question) throws RemoteException ;
    int getRMIPort () throws RemoteException ;
    RemoteDessinServeur addDessin (int x, int y, int w, int h, CreateurDessin cd, Color color) throws RemoteException ;
-   RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username) throws RemoteException;
+   RemoteProfilServeur addProfil ( int ranking, ProfilType type, String username, Parametres parametres) throws RemoteException;
    ArrayList <RemoteDessinServeur> getSharedDessins () throws RemoteException ;
    ArrayList <RemoteProfilServeur> getSharedProfils () throws RemoteException ;
    RemoteDessinServeur getDessin(String name) throws RemoteException ;
