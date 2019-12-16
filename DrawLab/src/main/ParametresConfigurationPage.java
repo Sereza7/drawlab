@@ -34,7 +34,13 @@ public class ParametresConfigurationPage extends JFrame{
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		this.session = new Session(clientLocal.getServeur(), new Profil(profil));
+		this.session = null;
+		try {
+			clientLocal.getServeur().addSession(profil);
+			this.session = new Session(clientLocal.getServeur(),new Profil(profil) );
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
 		clientLocal.setSession(session);
 		
 		getContentPane().setLayout(new BorderLayout());

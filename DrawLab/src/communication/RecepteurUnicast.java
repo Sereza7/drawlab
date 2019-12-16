@@ -125,14 +125,16 @@ public class RecepteurUnicast extends Thread implements Runnable {
 				*/
 			}
 			else if (command.equals("Session")) {
-				/*
+				//ADD somthing here
+			}
+			else if (command.equals("AddUserSession")) {
 				try {
-					profilLocal.supprimerProfil(name);
+					clientLocal.getServeur().getSharedSessionsHM().get(hm.get("session")).addUtilisateur(clientLocal.getServeur().getSharedProfilsHM().get(hm.get("utilisateur")));
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
-				*/
 			}
+			
 		}
 	}
 

@@ -2,37 +2,67 @@ package main;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import editeurs.Editeur;
+import serveur.Parametres;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
+import serveur.RemoteProfilServeur;
+import serveur.RemoteSessionServeur;
 
 public class Session{
 	private Editeur editeur;
 	private RemoteGlobalServeur serveur;
-	private ArrayList<Profil> users;
-	private boolean enCours;
+	private RemoteSessionServeur proxy;
+	private HashMap<String, Profil> users;
+	private boolean enCours = false;
+	private Parametres parametres;
 	
 	private ArrayList<ProfilListener>profilListeners;
 
-	
-	public Session(RemoteGlobalServeur serveur, Profil profil) {
-		this.serveur=serveur;
+	private Session() {
 		this.editeur=null;
-		this.users= new ArrayList<Profil>();
-		this.users.add(profil);
 		this.profilListeners= new ArrayList<ProfilListener>();
+		this.users= new HashMap<String, Profil>();
+	}
+	public Session(RemoteGlobalServeur serveur, Profil profil) {
+		this();
+		this.serveur=serveur;
+		this.users.put(profil.getUserName(),profil);
 	}
 	
+	public Session(RemoteSessionServeur remoteSession) {
+		this();
+		this.proxy = remoteSession;
+		HashMap<String, RemoteProfilServeur> usersServ = null;
+		try {
+			usersServ = remoteSession.getUtilisateurs();
+			this.parametres = remoteSession.getParametres();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (String key : usersServ.keySet()) {
+			users.put(key, new Profil(usersServ.get(key)));
+		}
+	}
+
 	public void addProfilListener(ProfilListener profilListener){
 		this.profilListeners.add(profilListener);
 	}
 	
 	public void addUser(Profil profil) {
 		//adds locally a user in the session
-		this.users.add(profil);
+		this.users.put(profil.getUserName(), profil);
 		for (ProfilListener profilListener : profilListeners)
 			profilListener.addedUser(profil);
+		try {
+			this.proxy.addUtilisateur(profil.proxy);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public void removeUser(Profil profil) {
 		//removes locally a user from the session
@@ -41,7 +71,11 @@ public class Session{
 			profilListener.removedUser(profil);
 	}
 	public ArrayList<Profil> getUsers(){
-		return users;
+		ArrayList<Profil>  arrayUsers = new ArrayList<Profil> ();
+		for (String key : users.keySet()) {
+			arrayUsers.add(users.get(key));
+		}
+		return arrayUsers;
 	}
 	
 	public void launchEditeur() {

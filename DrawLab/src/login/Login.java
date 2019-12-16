@@ -221,7 +221,6 @@ public class Login extends JFrame {
 			try {
 				clientLocal.getServeur().addProfil(0, cbParent.isSelected() ? ProfilType.ADULTE : ProfilType.ENFANT, username.getText(), new Parametres());
 			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

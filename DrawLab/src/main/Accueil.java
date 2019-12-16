@@ -115,9 +115,9 @@ public class Accueil extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			//joins a session 
+			new JoinPage(clientLocal, new Profil(profil));
 			
+			Accueil.this.dispose();
 		}
 		
 	}

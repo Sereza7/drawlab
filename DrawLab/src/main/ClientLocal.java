@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
-
 import communication.RecepteurUnicast;
 import login.Login;
 import serveur.RemoteDessinServeur;
@@ -132,6 +131,9 @@ public class ClientLocal {
 	}
 	public void setSession(Session session) {
 		this.session=session;
+	}
+	public Session getSession() {
+		return session;
 	}
 
 }
