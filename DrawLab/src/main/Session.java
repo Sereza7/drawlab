@@ -22,6 +22,12 @@ public class Session{
 	boolean enCours = false;
 	private Parametres parametres;
 	public String name;
+	private Editeur editeur;
+	private RemoteGlobalServeur serveur;
+	private ArrayList<Profil> users;
+	private boolean enCours;
+	private ArrayList<String> wordList;
+	private int seconds;
 	
 	private ArrayList<ProfilListener>profilListeners;
 	private ClientLocal clientLocal;
@@ -32,6 +38,8 @@ public class Session{
 		this.editeur=null;
 		this.profilListeners= new ArrayList<ProfilListener>();
 		this.users= new HashMap<String, Profil>();
+		this.wordList = new ArrayList<String>();
+		this.seconds = 0;
 	}
 	
 	public Session(ClientLocal clientLocal, RemoteSessionServeur remoteSession, JFrame setupWindow) {
@@ -89,10 +97,19 @@ public class Session{
 		return arrayUsers;
 	}
 	
+
 	public void launchEditeurs(ClientLocal clientLocal, RemoteProfilServeur profil) {
 		try {
 			this.proxy.setEnCours(true);
 		} catch (RemoteException e) {e.printStackTrace();}
+	public void setParameters(ClientLocal clientLocal, RemoteProfilServeur profil, ArrayList<String> wordList, int seconds ) {
+		this.wordList = wordList;
+		this.seconds = seconds;
+	}
+	
+	public void launchEditeur(ClientLocal clientLocal, RemoteProfilServeur profil) {
+		this.editeur= new Editeur(serveur, clientLocal, profil);
+		this.setEnCours(true);
 	}
 	
 	
