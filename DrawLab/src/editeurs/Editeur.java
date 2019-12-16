@@ -103,7 +103,7 @@ public class Editeur extends JFrame {
 		colourChooser.getSelectionModel().addChangeListener((new ColourListener(colourChooser, zone)));
 		zone.addPropertyChangeListener(new PreviewListener(preview));
 		
-		topBar = new TopBar(this, profil, clientLocal, 2);
+		topBar = new TopBar(this, profil, clientLocal, this);
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		setVisible(true);
 		preview.setDessin(zone.getCd(), zone.getForeground());

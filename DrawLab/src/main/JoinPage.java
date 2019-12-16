@@ -37,7 +37,7 @@ public class JoinPage extends JFrame {
 		setSize(1034, 636);
 		setVisible (true) ;
 		
-		TopBar topBar = new TopBar();
+		TopBar topBar = new TopBar(new Accueil(clientLocal, profil.proxy), profil.proxy, clientLocal, this);
 		topBar.setTopText(profil.getUserName()+" Select your session!");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		

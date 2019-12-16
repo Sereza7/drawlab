@@ -228,5 +228,11 @@ public class Login extends JFrame {
 			System.out.println("This username is already taken.");
 		}
 	}
+
+	public synchronized void updateProfilState(String name, boolean b) throws RemoteException{
+		Profil profilToUpdate = profils.get(name);
+		profilToUpdate.isLoggedOn(b);
+		
+	}
 }
 

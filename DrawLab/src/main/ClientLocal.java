@@ -16,7 +16,7 @@ public class ClientLocal {
 	private Thread threadReceiver ;
 	
 	// le récepteur de messages diffusés aux abonnés
-	private RecepteurUnicast recepteurUnicast ;
+	public RecepteurUnicast recepteurUnicast ;
 	
 	// le serveur distant qui centralise toutes les informations
 	private RemoteGlobalServeur serveur ;
@@ -135,5 +135,4 @@ public class ClientLocal {
 	public Session getSession() {
 		return session;
 	}
-
 }

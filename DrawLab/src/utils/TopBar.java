@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,22 +39,22 @@ public class TopBar extends JPanel{
 	private Editeur editeur;
 
 
-	public TopBar(Accueil accueil, RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
+	public TopBar(Accueil accueil, RemoteProfilServeur profil, ClientLocal clientLocal, JFrame parent) {
 		this.accueil = accueil;
-		init(profil, clientLocal, type); 
+		init(profil, clientLocal, parent); 
 	}
 	
-	public TopBar(ParametresConfigurationPage parametresConfigurationPage, RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
+	public TopBar(ParametresConfigurationPage parametresConfigurationPage, RemoteProfilServeur profil, ClientLocal clientLocal, JFrame parent) {
 		this.parametresConfigurationPage = parametresConfigurationPage;
-		init(profil, clientLocal, type); 
+		init(profil, clientLocal, parent); 
 	}
 	
-	public TopBar(Editeur editeur, RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
+	public TopBar(Editeur editeur, RemoteProfilServeur profil, ClientLocal clientLocal, JFrame parent) {
 		this.editeur = editeur;
-		init(profil, clientLocal, type); 
+		init(profil, clientLocal, parent); 
 	}
 	
-	public void init(RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
+	public void init(RemoteProfilServeur profil, ClientLocal clientLocal, JFrame parent) {
 
 		this.setBackground(Color.WHITE);
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 5));
@@ -136,15 +137,11 @@ public class TopBar extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					clientLocal.getServeur().supprimerProfil(profil.getUserName());
-					new Login(clientLocal);
-					if (type == 0) {
-						getAccueil().dispose();
-					} else if (type == 1) {
-						getParametresConfigurationPage().dispose();
-					} else if (type == 2) {
-						getEditeur().dispose();
-					}
+					profil.setLoggedOn(false);
+					clientLocal.recepteurUnicast.setLoginLocal(new Login(clientLocal));
+					
+					
+					parent.dispose();
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}

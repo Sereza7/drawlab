@@ -115,6 +115,13 @@ public class RecepteurUnicast extends Thread implements Runnable {
 				profilLocal.profilUpdateClassement(name, (int)hm.get("classement"));
 				*/
 			}
+			else if (command.equals("ProfilState")) {
+				try {
+					loginLocal.updateProfilState(name, (boolean)hm.get("state"));
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
 			else if (command.equals("SupprimerProfil")) {
 				/*
 				try {

@@ -126,7 +126,11 @@ public class ProfilServeur extends UnicastRemoteObject implements RemoteProfilSe
 	@Override
 	public void setLoggedOn(boolean b) throws RemoteException {
 		this.isLoggedOn=b;
-		
+		HashMap<String, Object> hm = new HashMap <String, Object> ();
+		hm.put ("state", new Boolean(b)) ;
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("ProfilState", getName (), hm) ;
+		}
 	}
 
 

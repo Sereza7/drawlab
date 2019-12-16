@@ -56,7 +56,7 @@ public class Accueil extends JFrame {
 	public void init () {
 		getContentPane().setLayout(new BorderLayout());
 		
-		TopBar topBar = new TopBar(this, this.profil, this.clientLocal, 0);
+		TopBar topBar = new TopBar(this, this.profil, this.clientLocal, this);
 		topBar.setTopText("Bienvenue à toi  "+username+" !");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
