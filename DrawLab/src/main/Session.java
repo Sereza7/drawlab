@@ -78,8 +78,8 @@ public class Session{
 		return arrayUsers;
 	}
 	
-	public void launchEditeur() {
-		this.editeur= new Editeur(serveur);
+	public void launchEditeur(ClientLocal clientLocal, RemoteProfilServeur profil) {
+		this.editeur= new Editeur(serveur, clientLocal, profil);
 		this.setEnCours(true);
 	}
 	
