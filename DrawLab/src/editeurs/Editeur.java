@@ -42,7 +42,7 @@ public class Editeur extends JFrame {
 	private ClientLocal clientLocal;
 	
 	
-	public Editeur(RemoteGlobalServeur serveur, ClientLocal clientLocal) {
+	public Editeur(RemoteGlobalServeur serveur, ClientLocal clientLocal, RemoteProfilServeur profil) {
 		super();
 		
 		zone = new ZoneDeDessin(serveur);

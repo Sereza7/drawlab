@@ -22,6 +22,7 @@ public class JoinPage extends JFrame {
 	private Session session;
 	private Profil profil;
 	private SessionBottomBar bottomBar;
+	private TopBar topBar;
 	
 	public JoinPage(ClientLocal clientLocal, Profil profil, TopBar topBar) {
 		this.clientLocal = clientLocal;
@@ -30,14 +31,14 @@ public class JoinPage extends JFrame {
 		this.profil = profil;
 		
 		
-		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setDefaultLookAndFeelDecorated(true);
 		setTitle("DrawLab");
 		setSize(1034, 636);
 		setVisible (true) ;
 		
-		//TopBar topBar = new TopBar(new Accueil(clientLocal, profil.proxy), profil.proxy, clientLocal, this);
-		topBar.setTopText(profil.getUserName()+" Select your session!");
+		this.topBar = topBar;
+		topBar.setTopText("Select your session!");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
 		
@@ -80,6 +81,7 @@ public class JoinPage extends JFrame {
 		clientLocal.getSession().createUser(profil);
 		bottomBar = new SessionBottomBar(clientLocal.getSession());
 		getContentPane().add(bottomBar,BorderLayout.SOUTH);
+		topBar.setTopText("Waiting...");
 		revalidate();
 	}
 }

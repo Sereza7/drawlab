@@ -63,8 +63,7 @@ public class ParametresConfigurationPage extends JFrame{
 //		getContentPane().setLayout(null);
 		
 		TopBar topBar = new TopBar(this, profil, clientLocal, this);
-		topBar.setTopText("Parameter the upcoming session.");
-		topBar.setBounds(0, 800, 1300, 100);
+		topBar.setTopText("Setup the upcoming session.");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
 		// Bottom bar part, don't need to move

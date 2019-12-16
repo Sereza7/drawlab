@@ -16,7 +16,6 @@ import serveur.RemoteProfilServeur;
 import serveur.RemoteSessionServeur;
 
 public class Session{
-	Editeur editeur;
 	private RemoteSessionServeur proxy;
 	private HashMap<String, Profil> users;
 	boolean enCours = false;
@@ -24,8 +23,6 @@ public class Session{
 	public String name;
 	private Editeur editeur;
 	private RemoteGlobalServeur serveur;
-	private ArrayList<Profil> users;
-	private boolean enCours;
 	private ArrayList<String> wordList;
 	private int seconds;
 	
@@ -101,7 +98,10 @@ public class Session{
 	public void launchEditeurs(ClientLocal clientLocal, RemoteProfilServeur profil) {
 		try {
 			this.proxy.setEnCours(true);
-		} catch (RemoteException e) {e.printStackTrace();}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 	public void setParameters(ClientLocal clientLocal, RemoteProfilServeur profil, ArrayList<String> wordList, int seconds ) {
 		this.wordList = wordList;
 		this.seconds = seconds;
@@ -152,7 +152,7 @@ public class Session{
 		if (this.enCours) {
 			System.out.println("OPENED A NEW EDITOR");
 			this.setupWindow.dispose();
-			this.editeur = new Editeur(clientLocal.getServeur(), clientLocal);
+			this.editeur = new Editeur(clientLocal.getServeur(), clientLocal, profil);
 		}
 	}
 
