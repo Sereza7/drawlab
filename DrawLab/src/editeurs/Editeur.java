@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import main.ClientLocal;
 import main.ColourListener;
 import main.CreateurDessin;
 import main.CreateurEllipse;
@@ -20,6 +21,7 @@ import main.Preview;
 import main.PreviewListener;
 import main.ShapeListener;
 import serveur.RemoteGlobalServeur;
+import serveur.RemoteProfilServeur;
 import utils.TopBar;
 
 
@@ -35,6 +37,8 @@ public class Editeur extends JFrame {
 	// l'élément visuel dans lequel on va manipuler des dessins 
 	private ZoneDeDessin zone ;
 	protected TopBar topBar;
+	private RemoteProfilServeur profil;
+	private ClientLocal clientLocal;
 	
 	
 	public Editeur(RemoteGlobalServeur serveur) {
@@ -99,7 +103,7 @@ public class Editeur extends JFrame {
 		colourChooser.getSelectionModel().addChangeListener((new ColourListener(colourChooser, zone)));
 		zone.addPropertyChangeListener(new PreviewListener(preview));
 		
-		topBar = new TopBar();
+		topBar = new TopBar(this, profil, clientLocal);
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		setVisible(true);
 		preview.setDessin(zone.getCd(), zone.getForeground());

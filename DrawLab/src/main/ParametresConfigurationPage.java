@@ -39,7 +39,7 @@ public class ParametresConfigurationPage extends JFrame{
 		
 		getContentPane().setLayout(new BorderLayout());
 		
-		TopBar topBar = new TopBar();
+		TopBar topBar = new TopBar(this, profil, clientLocal);
 		topBar.setTopText("Parameter the upcoming session.");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
