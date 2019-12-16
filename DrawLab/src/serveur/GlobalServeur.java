@@ -153,7 +153,7 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 		registerProfil (profil) ;
 		// ajout du profil dans la liste des dessins pour accès plus efficace au dessin
 		sharedProfils.put (profil.getName (), profil) ;
-		System.out.println ("addProfil : sharedProfils = " + sharedProfils) ;
+		System.out.println ("addProfil : sharedProfils = " + profil) ;
 		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
 		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
 		System.out.println(profil);
@@ -223,9 +223,16 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	public synchronized ArrayList<RemoteProfilServeur> getSharedProfils () throws RemoteException {
 		return new ArrayList<RemoteProfilServeur> (sharedProfils.values()) ;
 	}
+	@Override
+	public HashMap<String, RemoteProfilServeur> getSharedProfilsHM() throws RemoteException {
+		return sharedProfils;
+	}
 	
 	public synchronized ArrayList<RemoteSessionServeur> getSharedSessions () throws RemoteException {
 		return new ArrayList<RemoteSessionServeur> (sharedSessions.values()) ;
+	}
+	public synchronized  HashMap<String, RemoteSessionServeur> getSharedSessionsHM () throws RemoteException {
+		return sharedSessions;
 	}
 
 	// méthode indiquant quel est le port d'émission/réception à utiliser pour le client qui rejoint le serveur
@@ -244,5 +251,6 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 	public void answer (String question) throws RemoteException {
 		System.out.println ("SERVER : the question was : " + question) ;   
 	}
+
 
 }

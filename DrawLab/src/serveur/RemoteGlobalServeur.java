@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import main.CreateurDessin;
 import main.Profil.ProfilType;
@@ -16,6 +17,9 @@ public interface RemoteGlobalServeur extends Remote{
 
 	// méthodes permettant d'ajouter un nouveau profil dans le système
 	RemoteProfilServeur addProfil(int ranking, ProfilType type, String username, Parametres parametres) throws RemoteException;
+
+	// méthodes permettant d'ajouter une nouvelle session dans le système
+	RemoteSessionServeur addSession ( RemoteProfilServeur utilisateur)  throws RemoteException;
 
 	// méthode permettant d'accéder à un proxy d'un des dessins
 	RemoteDessinServeur getDessin(String name) throws RemoteException;
@@ -30,8 +34,12 @@ public interface RemoteGlobalServeur extends Remote{
 	// méthode permettant de récupérer la liste des dessins : utile lorsqu'un éditeur client se connecte 
 	ArrayList<RemoteDessinServeur> getSharedDessins() throws RemoteException;
 
-	// méthode permettant de récupérer la liste des profils : utile lorsqu'un éditeur client se connecte 
+	// méthode permettant de récupérer la liste des profils : utile lorsqu'un client se connecte 
 	ArrayList<RemoteProfilServeur> getSharedProfils() throws RemoteException;
+	HashMap<String, RemoteProfilServeur> getSharedProfilsHM () throws RemoteException;
+	
+	ArrayList<RemoteSessionServeur> getSharedSessions () throws RemoteException;
+	HashMap<String, RemoteSessionServeur> getSharedSessionsHM () throws RemoteException;
 
 	// méthode indiquant quel est le port d'émission/réception à utiliser pour le client qui rejoint le serveur
 	// on utilise une valeur arbitraitre de port qu'on incrémente de 1 à chaque arrivée d'un nouveau client
@@ -41,5 +49,6 @@ public interface RemoteGlobalServeur extends Remote{
 
 	// méthode permettant juste de vérifier que le serveur est lancé
 	void answer(String question) throws RemoteException;
+
 
 }

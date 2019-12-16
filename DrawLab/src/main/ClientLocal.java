@@ -5,8 +5,8 @@ import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
-
 import communication.RecepteurUnicast;
+import editeurs.Editeur;
 import login.Login;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
@@ -17,7 +17,7 @@ public class ClientLocal {
 	private Thread threadReceiver ;
 	
 	// le récepteur de messages diffusés aux abonnés
-	private RecepteurUnicast recepteurUnicast ;
+	public RecepteurUnicast recepteurUnicast ;
 	
 	// le serveur distant qui centralise toutes les informations
 	private RemoteGlobalServeur serveur ;
@@ -116,7 +116,8 @@ public class ClientLocal {
 		this.session.saveImage();
 	}
 
-
+	
+	
 	public synchronized void supprimerDessin(String name) throws RemoteException {
 		session.supprimerDessin(name);
 		
@@ -133,5 +134,13 @@ public class ClientLocal {
 	public void setSession(Session session) {
 		this.session=session;
 	}
-
+	public Session getSession() {
+		return session;
+	}
+	public Profil getProfil() {
+		return profil;
+	}
+	public void setProfil(Profil profil) {
+		this.profil=profil;
+	}
 }

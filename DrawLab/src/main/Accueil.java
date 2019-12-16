@@ -32,10 +32,12 @@ public class Accueil extends JFrame {
 	private Font fontLabel = new Font("Arial", Font.PLAIN, 40);
 	private RemoteProfilServeur profil;
 	private ClientLocal clientLocal;
+	private TopBar topBar;
 	
 	public Accueil (ClientLocal clientLocal, RemoteProfilServeur profil) {
 		this.clientLocal = clientLocal;
 		this.profil = profil;
+		this.clientLocal.setProfil(new Profil(profil));
 		try {
 			this.username = profil.getUserName();
 			this.type = profil.getProfilType();
@@ -56,7 +58,7 @@ public class Accueil extends JFrame {
 	public void init () {
 		getContentPane().setLayout(new BorderLayout());
 		
-		TopBar topBar = new TopBar(this, this.profil, this.clientLocal, 0);
+		topBar = new TopBar(this, this.profil, this.clientLocal, this);
 		topBar.setTopText("Bienvenue à toi  "+username+" !");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
@@ -102,8 +104,7 @@ public class Accueil extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			//create a new parameter page (linked to a session)
+			//create a new parameter page (super to a session)
 			new ParametresConfigurationPage(clientLocal, profil);
 			
 			Accueil.this.dispose();
@@ -114,9 +115,9 @@ public class Accueil extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			//joins a session 
+			new JoinPage(clientLocal, new Profil(profil), topBar);
 			
+			Accueil.this.dispose();
 		}
 		
 	}

@@ -19,6 +19,7 @@ import main.CreateurRectangle;
 import main.CreateurRectanglePlein;
 import main.Preview;
 import main.PreviewListener;
+import main.Profil;
 import main.ShapeListener;
 import serveur.RemoteGlobalServeur;
 import serveur.RemoteProfilServeur;
@@ -103,7 +104,7 @@ public class Editeur extends JFrame {
 		colourChooser.getSelectionModel().addChangeListener((new ColourListener(colourChooser, zone)));
 		zone.addPropertyChangeListener(new PreviewListener(preview));
 		
-		topBar = new TopBar(this, profil, clientLocal, 2);
+		topBar = new TopBar(this, clientLocal.getProfil().getProxy(), clientLocal, this);
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		setVisible(true);
 		preview.setDessin(zone.getCd(), zone.getForeground());

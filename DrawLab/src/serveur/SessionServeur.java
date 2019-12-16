@@ -27,10 +27,7 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 	protected transient List<EmetteurUnicast> emetteurs ;
 
 	
-	/* (non-Javadoc)
-	 * @see serveur.RemoteSessionServeur#setEmetteurs(java.util.List)
-	 */
-	@Override
+
 	public void setEmetteurs (List<EmetteurUnicast> emetteurs) {
 		this.emetteurs = emetteurs ;
 	}
@@ -55,24 +52,17 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see serveur.RemoteSessionServeur#getName()
-	 */
 	@Override
 	public String getName () throws RemoteException {
 		return name ;
 	}
 
-	/* (non-Javadoc)
-	 * @see serveur.RemoteSessionServeur#getUtilisateurs()
-	 */
+
 	@Override
 	public HashMap<String, RemoteProfilServeur> getUtilisateurs () throws RemoteException {
 		return utilisateurs ;
 	}
-	/* (non-Javadoc)
-	 * @see serveur.RemoteSessionServeur#isEnCours()
-	 */
+
 	@Override
 	public boolean isEnCours () throws RemoteException {
 		return enCours ;
@@ -102,19 +92,27 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 	 * @see serveur.RemoteSessionServeur#addUtilisateur(serveur.ProfilServeur)
 	 */
 	@Override
-	public void addUtilisateur (ProfilServeur utilisateur) throws RemoteException {
+	public void addUtilisateur (RemoteProfilServeur utilisateur) throws RemoteException {
+		
+		// ajout du profil dans la liste des profils de session pour accès plus efficace au profil
 		this.utilisateurs.put(utilisateur.getName(),utilisateur);
+		System.out.println ("addProfiltoSession : sharedProfils = " + utilisateurs) ;
+		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
+		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
+		System.out.println(utilisateur);
+		
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
+		hm.put("session", this.getName());
 		hm.put ("utilisateur", utilisateur) ;
 		for (EmetteurUnicast sender : emetteurs) {
 			sender.diffuseMessage ("AddUserSession", getName (), hm) ;
 		}
 	}
 	
-	public void removeUtilisateur (ProfilServeur utilisateur) throws RemoteException {
+	public void removeUtilisateur (RemoteProfilServeur utilisateur) throws RemoteException {
 		this.utilisateurs.remove(utilisateur.getName());
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
-		hm.put("session", this);
+		hm.put("session", this.getName());
 		hm.put ("utilisateur", utilisateur) ;
 		for (EmetteurUnicast sender : emetteurs) {
 			sender.diffuseMessage ("RemoveUserSession", getName (), hm) ;
@@ -132,6 +130,17 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 			sender.diffuseMessage ("SupprimerSession", getName (), hm) ;
 		}
 		
+	}
+
+	@Override
+	public void setEnCours(boolean b) throws RemoteException {
+		System.out.println ("setEnCours : enCours = " + b) ;
+		this.enCours=b;
+		HashMap<String, Object> hm = new HashMap <String, Object> () ;
+		hm.put("encours", b);
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("enCours", getName (), hm) ;
+		}
 	}
 
 

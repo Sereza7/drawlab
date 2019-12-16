@@ -50,21 +50,36 @@ public class ParametresConfigurationPage extends JFrame{
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		this.session = new Session(clientLocal.getServeur(), new Profil(profil));
+		this.session = null;
+		try {
+			this.session = new Session(clientLocal, clientLocal.getServeur().addSession(profil),this);
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+		
 		clientLocal.setSession(session);
 		
 		getContentPane().setLayout(new BorderLayout());
 //		getContentPane().setLayout(null);
 		
-		// Top bar part, don't need to move
-		TopBar topBar = new TopBar(this, profil, clientLocal, 1);
-		topBar.setTopText("Parameter the upcoming session.");
-		topBar.setBounds(0, 800, 1300, 100);
+		TopBar topBar = new TopBar(this, profil, clientLocal, this);
+		topBar.setTopText("Setup the upcoming session.");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
 		// Bottom bar part, don't need to move
 		SessionBottomBar bottomBar = new SessionBottomBar(session);
 		getContentPane().add(bottomBar, BorderLayout.SOUTH);
+		
+		JButton launchSessionButton = new JButton("Launch the playing session.");
+		launchSessionButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
+				
+			}
+		});
+		getContentPane().add(launchSessionButton,BorderLayout.EAST);
 
 		
 		JPanel panel = new JPanel();

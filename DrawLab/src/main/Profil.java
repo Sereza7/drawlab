@@ -13,6 +13,7 @@ public class Profil {
 	ProfilType type;
 	int classement;
 	String username;
+	boolean isLoggedOn = false;
 	public RemoteProfilServeur proxy;
 	Parametres defaultparameters;
 	
@@ -22,6 +23,7 @@ public class Profil {
 			username = proxy.getUserName();
 			classement = proxy.getClassement();
 			type = proxy.getProfilType();
+			isLoggedOn = proxy.isLoggedOn();
 			this.defaultparameters=proxy.getDefaultParameters();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -37,5 +39,10 @@ public class Profil {
 	public String getUserName() {
 		return this.username;
 	}
-	
+	public void isLoggedOn(boolean b) {
+		this.isLoggedOn=b;
+	}
+	public RemoteProfilServeur getProxy() {
+		return this.proxy;
+	}
 }

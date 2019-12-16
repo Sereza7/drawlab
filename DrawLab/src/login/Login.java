@@ -52,6 +52,12 @@ public class Login extends JFrame {
 	
 	public void init (ClientLocal clientLocal) {
 		this.clientLocal=clientLocal;
+		try {
+			for (RemoteProfilServeur profil : clientLocal.getServeur().getSharedProfils()) {
+				this.profils.put(profil.getName(), new Profil(profil));
+			}
+		} catch (RemoteException e1) {e1.printStackTrace();}
+		
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -221,13 +227,18 @@ public class Login extends JFrame {
 			try {
 				clientLocal.getServeur().addProfil(0, cbParent.isSelected() ? ProfilType.ADULTE : ProfilType.ENFANT, username.getText(), new Parametres());
 			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
 		else {
 			System.out.println("This username is already taken.");
 		}
+	}
+
+	public synchronized void updateProfilState(String name, boolean b) throws RemoteException{
+		Profil profilToUpdate = profils.get(name);
+		profilToUpdate.isLoggedOn(b);
+		
 	}
 }
 

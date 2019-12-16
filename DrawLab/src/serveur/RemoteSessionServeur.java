@@ -9,8 +9,6 @@ import communication.EmetteurUnicast;
 
 public interface RemoteSessionServeur extends Remote{
 
-	void setEmetteurs(List<EmetteurUnicast> emetteurs);
-
 	String getName() throws RemoteException;
 
 	HashMap<String, RemoteProfilServeur> getUtilisateurs() throws RemoteException;
@@ -21,10 +19,12 @@ public interface RemoteSessionServeur extends Remote{
 
 	void setParametres(Parametres parametres) throws RemoteException;
 
-	void addUtilisateur(ProfilServeur utilisateur) throws RemoteException;
+	void addUtilisateur(RemoteProfilServeur remoteProfilServeur) throws RemoteException;
 	
-	void removeUtilisateur(ProfilServeur utilisateur) throws RemoteException;
+	void removeUtilisateur(RemoteProfilServeur utilisateur) throws RemoteException;
 
 	void supprimer() throws RemoteException;
+
+	void setEnCours(boolean b) throws RemoteException;
 
 }
