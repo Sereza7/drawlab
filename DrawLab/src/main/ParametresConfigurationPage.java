@@ -38,6 +38,10 @@ public class ParametresConfigurationPage extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private Session session;
 	private DefaultTableModel model = new DefaultTableModel();
+	private ArrayList<String> wordList = new ArrayList<String>();
+	private int seconds;
+	
+	
 	public ParametresConfigurationPage(ClientLocal clientLocal, RemoteProfilServeur profil) {
 		
 		Parametres baseconfiguration = null;
@@ -225,9 +229,11 @@ public class ParametresConfigurationPage extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getMinute(timeText);
-				ParametresConfigurationPage.this.session.launchEditeur(clientLocal, profil);
-				
+				getSeconde(timeText);
+				setWordList();
+				setSeconds();
+				ParametresConfigurationPage.this.session.setParameters(clientLocal, profil, wordList, seconds);
+				ParametresConfigurationPage.this.session.launchEditeur(clientLocal, profil);			
 				ParametresConfigurationPage.this.dispose();
 				
 			}
@@ -242,7 +248,7 @@ public class ParametresConfigurationPage extends JFrame{
 	} 
 	
     public ArrayList<String> getWordsToList(JTable table) {
-    	ArrayList<String> wordList = new ArrayList<String>();
+//    	ArrayList<String> wordList = new ArrayList<String>();
     	for(int i=0; i < table.getRowCount(); i++) {
     		wordList.add(model.getValueAt(i, 0).toString());
     	}
@@ -252,12 +258,23 @@ public class ParametresConfigurationPage extends JFrame{
     	return wordList;
     }
     
-    public int getMinute(JTextField timePlay) {
-    	System.out.println("time: "+ Integer.valueOf(timePlay.getText()));
-    	return Integer.valueOf(timePlay.getText());
+    public int getSeconde(JTextField timePlay) {
+    	System.out.println("time: "+ (Integer.valueOf(timePlay.getText())*60));
+    	seconds = Integer.valueOf(timePlay.getText())*60;
+    	return seconds;
     	
     	
     }
+    
+    public void setWordList() {
+    	this.wordList = wordList;
+    	
+    }
+    
+    public void setSeconds() {
+    	this.seconds = seconds;
+    }
+
 }
 
 

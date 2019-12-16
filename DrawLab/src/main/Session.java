@@ -13,6 +13,8 @@ public class Session{
 	private RemoteGlobalServeur serveur;
 	private ArrayList<Profil> users;
 	private boolean enCours;
+	private ArrayList<String> wordList;
+	private int seconds;
 	
 	private ArrayList<ProfilListener>profilListeners;
 
@@ -23,6 +25,8 @@ public class Session{
 		this.users= new ArrayList<Profil>();
 		this.users.add(profil);
 		this.profilListeners= new ArrayList<ProfilListener>();
+		this.wordList = new ArrayList<String>();
+		this.seconds = 0;
 	}
 	
 	public void addProfilListener(ProfilListener profilListener){
@@ -43,6 +47,11 @@ public class Session{
 	}
 	public ArrayList<Profil> getUsers(){
 		return users;
+	}
+	
+	public void setParameters(ClientLocal clientLocal, RemoteProfilServeur profil, ArrayList<String> wordList, int seconds ) {
+		this.wordList = wordList;
+		this.seconds = seconds;
 	}
 	
 	public void launchEditeur(ClientLocal clientLocal, RemoteProfilServeur profil) {
