@@ -52,6 +52,12 @@ public class Login extends JFrame {
 	
 	public void init (ClientLocal clientLocal) {
 		this.clientLocal=clientLocal;
+		try {
+			for (RemoteProfilServeur profil : clientLocal.getServeur().getSharedProfils()) {
+				this.profils.put(profil.getName(), new Profil(profil));
+			}
+		} catch (RemoteException e1) {e1.printStackTrace();}
+		
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);

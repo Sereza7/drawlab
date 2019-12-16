@@ -59,7 +59,6 @@ public class ParametresConfigurationPage extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ParametresConfigurationPage.this.session.
 				ParametresConfigurationPage.this.session.launchEditeur(clientLocal, profil);
 				
 				ParametresConfigurationPage.this.dispose();
