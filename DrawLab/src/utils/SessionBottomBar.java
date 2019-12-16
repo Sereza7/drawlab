@@ -63,6 +63,7 @@ public class SessionBottomBar extends JPanel{
 				ProfilInterface newProfilInterface = new ProfilInterface(profil, defaultImage);
 				profilInterfaces.add(newProfilInterface);
 				add(newProfilInterface);
+				revalidate();
 				return;
 			}
 		});

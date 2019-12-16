@@ -23,7 +23,7 @@ public class JoinPage extends JFrame {
 	private Profil profil;
 	private SessionBottomBar bottomBar;
 	
-	public JoinPage(ClientLocal clientLocal, Profil profil) {
+	public JoinPage(ClientLocal clientLocal, Profil profil, TopBar topBar) {
 		this.clientLocal = clientLocal;
 		this.session=null;
 		this.bottomBar=null;
@@ -33,11 +33,10 @@ public class JoinPage extends JFrame {
 		
 		setDefaultLookAndFeelDecorated(true);
 		setTitle("DrawLab");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1034, 636);
 		setVisible (true) ;
 		
-		TopBar topBar = new TopBar(new Accueil(clientLocal, profil.proxy), profil.proxy, clientLocal, this);
+		//TopBar topBar = new TopBar(new Accueil(clientLocal, profil.proxy), profil.proxy, clientLocal, this);
 		topBar.setTopText(profil.getUserName()+" Select your session!");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
@@ -49,11 +48,11 @@ public class JoinPage extends JFrame {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		DefaultListModel<Session> listModel = new DefaultListModel<Session>();
+		DefaultListModel<RemoteSessionServeur> listModel = new DefaultListModel<RemoteSessionServeur>();
 		for (RemoteSessionServeur remoteSession : data) {
-			listModel.addElement(new Session(remoteSession));
+			listModel.addElement(remoteSession);
 		}
-		JList<Session> sessionList = new JList<Session>(listModel);
+		JList<RemoteSessionServeur> sessionList = new JList<RemoteSessionServeur>(listModel);
 		getContentPane().add(sessionList, BorderLayout.CENTER);
 		
 		JButton joinButton = new JButton("Join");
@@ -66,6 +65,7 @@ public class JoinPage extends JFrame {
 			}
 		});
 		getContentPane().add(joinButton,BorderLayout.EAST);
+		this.setVisible(true);
 	}
 	public void resetSession() {
 		if(this.session!=null) {
@@ -74,12 +74,12 @@ public class JoinPage extends JFrame {
 			this.session=null;
 		}
 	}
-	public void setSession(Session session) {
+	public void setSession(RemoteSessionServeur remoteSession) {
 		resetSession();
-		this.session= session;
-		session.addUser(profil);
-		bottomBar = new SessionBottomBar(JoinPage.this.session);
-		getContentPane().add(JoinPage.this.bottomBar,BorderLayout.SOUTH);
-		setVisible(true);
+		clientLocal.setSession(new Session(clientLocal, remoteSession,this));
+		clientLocal.getSession().createUser(profil);
+		bottomBar = new SessionBottomBar(clientLocal.getSession());
+		getContentPane().add(bottomBar,BorderLayout.SOUTH);
+		revalidate();
 	}
 }

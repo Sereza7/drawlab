@@ -6,6 +6,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import communication.RecepteurUnicast;
+import editeurs.Editeur;
 import login.Login;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
@@ -115,7 +116,8 @@ public class ClientLocal {
 		this.session.saveImage();
 	}
 
-
+	
+	
 	public synchronized void supprimerDessin(String name) throws RemoteException {
 		session.supprimerDessin(name);
 		
@@ -134,5 +136,11 @@ public class ClientLocal {
 	}
 	public Session getSession() {
 		return session;
+	}
+	public Profil getProfil() {
+		return profil;
+	}
+	public void setProfil(Profil profil) {
+		this.profil=profil;
 	}
 }

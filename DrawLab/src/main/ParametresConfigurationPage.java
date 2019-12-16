@@ -38,11 +38,11 @@ public class ParametresConfigurationPage extends JFrame{
 		}
 		this.session = null;
 		try {
-			clientLocal.getServeur().addSession(profil);
-			this.session = new Session(clientLocal.getServeur(),new Profil(profil) );
+			this.session = new Session(clientLocal, clientLocal.getServeur().addSession(profil),this);
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}
+		
 		clientLocal.setSession(session);
 		
 		getContentPane().setLayout(new BorderLayout());
@@ -59,9 +59,7 @@ public class ParametresConfigurationPage extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ParametresConfigurationPage.this.session.launchEditeur(clientLocal, profil);
-				
-				ParametresConfigurationPage.this.dispose();
+				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
 				
 			}
 		});

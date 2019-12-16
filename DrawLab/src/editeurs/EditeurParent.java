@@ -12,7 +12,7 @@ public class EditeurParent extends Editeur {
 	private static final long serialVersionUID = 1L;
 
 	public EditeurParent(RemoteGlobalServeur serveur, ClientLocal clientLocal, RemoteProfilServeur profil, String dessinADeviner) {
-		super(serveur, clientLocal, profil);
+		super(serveur, clientLocal);
 		super.topBar.setTopText("Draw a "+dessinADeviner);
 		
 	}

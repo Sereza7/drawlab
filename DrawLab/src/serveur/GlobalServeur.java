@@ -153,7 +153,7 @@ public class GlobalServeur extends UnicastRemoteObject implements  Serializable,
 		registerProfil (profil) ;
 		// ajout du profil dans la liste des dessins pour accès plus efficace au dessin
 		sharedProfils.put (profil.getName (), profil) ;
-		System.out.println ("addProfil : sharedProfils = " + sharedProfils) ;
+		System.out.println ("addProfil : sharedProfils = " + profil) ;
 		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
 		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
 		System.out.println(profil);

@@ -42,4 +42,7 @@ public class Profil {
 	public void isLoggedOn(boolean b) {
 		this.isLoggedOn=b;
 	}
+	public RemoteProfilServeur getProxy() {
+		return this.proxy;
+	}
 }

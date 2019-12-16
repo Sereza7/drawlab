@@ -96,14 +96,14 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 		
 		// ajout du profil dans la liste des profils de session pour accès plus efficace au profil
 		this.utilisateurs.put(utilisateur.getName(),utilisateur);
-		System.out.println ("addProfil : sharedProfils = " + utilisateurs) ;
+		System.out.println ("addProfiltoSession : sharedProfils = " + utilisateurs) ;
 		// renvoi du dessin à l'éditeur local appelant : l'éditeur local récupèrera seulement un RemoteDessin
 		// sur lequel il pourra invoquer des méthodes en rmi et qui seront relayées au référent associé sur le serveur  
 		System.out.println(utilisateur);
 		
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
 		hm.put("session", this.getName());
-		hm.put ("utilisateur", utilisateur.getName()) ;
+		hm.put ("utilisateur", utilisateur) ;
 		for (EmetteurUnicast sender : emetteurs) {
 			sender.diffuseMessage ("AddUserSession", getName (), hm) ;
 		}
@@ -112,7 +112,7 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 	public void removeUtilisateur (RemoteProfilServeur utilisateur) throws RemoteException {
 		this.utilisateurs.remove(utilisateur.getName());
 		HashMap<String, Object> hm = new HashMap <String, Object> () ;
-		hm.put("session", this);
+		hm.put("session", this.getName());
 		hm.put ("utilisateur", utilisateur) ;
 		for (EmetteurUnicast sender : emetteurs) {
 			sender.diffuseMessage ("RemoveUserSession", getName (), hm) ;
@@ -130,6 +130,17 @@ public class SessionServeur extends UnicastRemoteObject implements Serializable,
 			sender.diffuseMessage ("SupprimerSession", getName (), hm) ;
 		}
 		
+	}
+
+	@Override
+	public void setEnCours(boolean b) throws RemoteException {
+		System.out.println ("setEnCours : enCours = " + b) ;
+		this.enCours=b;
+		HashMap<String, Object> hm = new HashMap <String, Object> () ;
+		hm.put("encours", b);
+		for (EmetteurUnicast sender : emetteurs) {
+			sender.diffuseMessage ("enCours", getName (), hm) ;
+		}
 	}
 
 

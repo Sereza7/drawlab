@@ -12,6 +12,10 @@ import java.util.HashMap ;
 import editeurs.ZoneDeDessin;
 import login.Login;
 import main.ClientLocal;
+import main.Profil;
+import main.Profil.ProfilType;
+import serveur.Parametres;
+import serveur.RemoteProfilServeur;
 
 //---------------------------------------------------------------------
 // classe permettant de recevoir des messages diffusés à une adresse (en multicast)
@@ -28,7 +32,7 @@ public class RecepteurUnicast extends Thread implements Runnable {
 	// les données à récupérer conformément au format des données envoyées :
 	// - une chaine de caractère pour décrire l'action à réaliser
 	private String command = new String () ;
-	// - une chaine de caractère pour déterminer l'objet coble du message
+	// - une chaine de caractère pour déterminer l'objet cible du message
 	private String name = new String () ;
 	// - une HashMap dans laquelle on récupèrera les paramètres nécessaires aux actions à effectuer
 	private HashMap<String, Object> hm = new HashMap<String, Object> () ;
@@ -132,14 +136,19 @@ public class RecepteurUnicast extends Thread implements Runnable {
 				*/
 			}
 			else if (command.equals("Session")) {
-				//ADD somthing here
+				//ADD somthing here for updating the sessions in realtime
 			}
 			else if (command.equals("AddUserSession")) {
-				try {
-					clientLocal.getServeur().getSharedSessionsHM().get(hm.get("session")).addUtilisateur(clientLocal.getServeur().getSharedProfilsHM().get(hm.get("utilisateur")));
-				} catch (RemoteException e) {
-					e.printStackTrace();
+				if (((String)hm.get("session")).equals(clientLocal.getSession().name)) {
+					clientLocal.getSession().addUser(new Profil((RemoteProfilServeur)hm.get("utilisateur")));
 				}
+				else {
+					System.out.println("The user added wasn't for this session.");
+				}
+			}
+			else if (command.equals("enCours")) {
+				System.out.println("Launch the sessions.");
+				clientLocal.getSession().setEnCours((boolean)hm.get("encours"));
 			}
 			
 		}

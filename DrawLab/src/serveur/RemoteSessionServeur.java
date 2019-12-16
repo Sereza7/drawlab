@@ -25,4 +25,6 @@ public interface RemoteSessionServeur extends Remote{
 
 	void supprimer() throws RemoteException;
 
+	void setEnCours(boolean b) throws RemoteException;
+
 }
