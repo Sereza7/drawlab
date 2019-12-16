@@ -26,6 +26,8 @@ public class ParametresConfigurationPage extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private Session session;
+	
+	
 	public ParametresConfigurationPage(ClientLocal clientLocal, RemoteProfilServeur profil) {
 		
 		Parametres baseconfiguration = null;
@@ -39,7 +41,7 @@ public class ParametresConfigurationPage extends JFrame{
 		
 		getContentPane().setLayout(new BorderLayout());
 		
-		TopBar topBar = new TopBar(this, profil, clientLocal);
+		TopBar topBar = new TopBar(this, profil, clientLocal, 1);
 		topBar.setTopText("Parameter the upcoming session.");
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		
@@ -51,7 +53,7 @@ public class ParametresConfigurationPage extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ParametresConfigurationPage.this.session.launchEditeur();
+				ParametresConfigurationPage.this.session.launchEditeur(clientLocal, profil);
 				
 				ParametresConfigurationPage.this.dispose();
 				

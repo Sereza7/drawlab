@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import editeurs.Editeur;
 import serveur.RemoteDessinServeur;
 import serveur.RemoteGlobalServeur;
+import serveur.RemoteProfilServeur;
 
 public class Session{
 	private Editeur editeur;
@@ -44,8 +45,8 @@ public class Session{
 		return users;
 	}
 	
-	public void launchEditeur() {
-		this.editeur= new Editeur(serveur);
+	public void launchEditeur(ClientLocal clientLocal, RemoteProfilServeur profil) {
+		this.editeur= new Editeur(serveur, clientLocal, profil);
 		this.setEnCours(true);
 	}
 	

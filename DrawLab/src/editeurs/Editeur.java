@@ -41,7 +41,7 @@ public class Editeur extends JFrame {
 	private ClientLocal clientLocal;
 	
 	
-	public Editeur(RemoteGlobalServeur serveur) {
+	public Editeur(RemoteGlobalServeur serveur, ClientLocal clientLocal, RemoteProfilServeur profil) {
 		super();
 		
 		zone = new ZoneDeDessin(serveur);
@@ -103,7 +103,7 @@ public class Editeur extends JFrame {
 		colourChooser.getSelectionModel().addChangeListener((new ColourListener(colourChooser, zone)));
 		zone.addPropertyChangeListener(new PreviewListener(preview));
 		
-		topBar = new TopBar(this, profil, clientLocal);
+		topBar = new TopBar(this, profil, clientLocal, 2);
 		getContentPane().add(topBar, BorderLayout.NORTH);
 		setVisible(true);
 		preview.setDessin(zone.getCd(), zone.getForeground());

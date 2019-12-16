@@ -37,25 +37,27 @@ public class TopBar extends JPanel{
 	private Accueil accueil;
 	private ParametresConfigurationPage parametresConfigurationPage;
 	private Editeur editeur;
+	private int type;
 
-	public TopBar(Accueil accueil, RemoteProfilServeur profil, ClientLocal clientLocal) {
+	public TopBar(Accueil accueil, RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
 		this.accueil = accueil;
-		init(profil, clientLocal); 
+		init(profil, clientLocal, type); 
 	}
 	
-	public TopBar(ParametresConfigurationPage parametresConfigurationPage, RemoteProfilServeur profil, ClientLocal clientLocal) {
+	public TopBar(ParametresConfigurationPage parametresConfigurationPage, RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
 		this.parametresConfigurationPage = parametresConfigurationPage;
-		init(profil, clientLocal); 
+		init(profil, clientLocal, type); 
 	}
 	
-	public TopBar(Editeur editeur, RemoteProfilServeur profil, ClientLocal clientLocal) {
+	public TopBar(Editeur editeur, RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
 		this.editeur = editeur;
-		init(profil, clientLocal); 
+		init(profil, clientLocal, type); 
 	}
 	
-	public void init(RemoteProfilServeur profil, ClientLocal clientLocal) {
-		this.profil = profil;
-		this.clientLocal = clientLocal;
+	public void init(RemoteProfilServeur profil, ClientLocal clientLocal, int type) {
+//		this.profil = profil;
+//		this.clientLocal = clientLocal;
+//		this.type = type;
 		
 		this.setBackground(Color.WHITE);
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 5));
@@ -138,14 +140,18 @@ public class TopBar extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					RemoteProfilServeur profil = getProfil();
-					ClientLocal clientLocal = getClientLocal();
-					Accueil accueil = getAccueil();
-//					ParametresConfigurationPage parametresConfigurationPage = getParametresConfigurationPage();
-//					Editeur editeur = getEditeur();
+//					RemoteProfilServeur profil = getProfil();
+//					ClientLocal clientLocal = getClientLocal();
 					clientLocal.getServeur().supprimerProfil(profil.getUserName());
 					new Login(clientLocal);
-					accueil.dispose();
+//					int type = getType();
+					if (type == 0) {
+						getAccueil().dispose();
+					} else if (type == 1) {
+						getParametresConfigurationPage().dispose();
+					} else if (type == 2) {
+						getEditeur().dispose();
+					}
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
@@ -159,6 +165,10 @@ public class TopBar extends JPanel{
 		return this.accueil;
 	}
 	
+//	public int getType() {
+//		return this.type;
+//	}
+	
 	public ParametresConfigurationPage getParametresConfigurationPage() {
 		return this.parametresConfigurationPage;
 	}
@@ -167,13 +177,13 @@ public class TopBar extends JPanel{
 		return this.editeur;
 	}
 	
-	public RemoteProfilServeur getProfil() {
-		return this.profil;
-	}
-	
-	public ClientLocal getClientLocal() {
-		return this.clientLocal;
-	}
+//	public RemoteProfilServeur getProfil() {
+//		return this.profil;
+//	}
+//	
+//	public ClientLocal getClientLocal() {
+//		return this.clientLocal;
+//	}
 	
 	public JLabel getTopText() {
 		return topText;
