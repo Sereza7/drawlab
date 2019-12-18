@@ -17,5 +17,5 @@ The password field for authentication is useless (and no password is saved anywh
 Only "parent" accounts can create a game-session.
 
 For now, no matter the session, the game will be launched and the editors updated.
-The game of a child (joiner) will be launched only when the creator of the game presses its button "Launch the game".
+The game of a child (joiner) will be launched only when the creator of the game presses its button "Start".
 (we intented the children to be able to join a game session mid way)
