@@ -95,7 +95,7 @@ public class TopBar extends JPanel{
 		btnGroup.add(trophy);
 		
 		try {
-			image = ImageIO.read(new File("trophy.jpg"));
+			image = ImageIO.read(new File("img/trophy.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -108,7 +108,7 @@ public class TopBar extends JPanel{
 		soundOrShare.setBackground(Color.WHITE);
 		btnGroup.add(soundOrShare);
 		try {
-			image = ImageIO.read(new File("soundOrShare.png"));
+			image = ImageIO.read(new File("img/soundOrShare.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -127,7 +127,7 @@ public class TopBar extends JPanel{
 		logOut.setBackground(Color.WHITE);
 		btnGroup.add(logOut);
 		try {
-			image = ImageIO.read(new File("logout.png"));
+			image = ImageIO.read(new File("img/logout.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

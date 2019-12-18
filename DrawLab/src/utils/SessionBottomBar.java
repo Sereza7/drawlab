@@ -1,5 +1,6 @@
 package utils;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -24,11 +25,12 @@ public class SessionBottomBar extends JPanel{
 	private Icon defaultImage;
 	public SessionBottomBar(Session session) {
 		setLayout(new FlowLayout());
+		setBackground(Color.WHITE);
 		ArrayList<ProfilInterface> profilInterfaces = new ArrayList<ProfilInterface>();
 		
 		BufferedImage defaultUserImage = null;
         try {
-        	defaultUserImage = ImageIO.read(new File("defaultUserPicture.jpg"));
+        	defaultUserImage = ImageIO.read(new File("img/defaultUserPicture.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

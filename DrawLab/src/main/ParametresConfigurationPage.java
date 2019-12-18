@@ -70,16 +70,16 @@ public class ParametresConfigurationPage extends JFrame{
 		SessionBottomBar bottomBar = new SessionBottomBar(session);
 		getContentPane().add(bottomBar, BorderLayout.SOUTH);
 		
-		JButton launchSessionButton = new JButton("Launch the playing session.");
-		launchSessionButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
-				
-			}
-		});
-		getContentPane().add(launchSessionButton,BorderLayout.EAST);
+//		JButton launchSessionButton = new JButton("Launch the playing session.");
+//		launchSessionButton.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
+//				
+//			}
+//		});
+//		getContentPane().add(launchSessionButton,BorderLayout.EAST);
 
 		
 		JPanel panel = new JPanel();
@@ -87,9 +87,6 @@ public class ParametresConfigurationPage extends JFrame{
 		panel.setLayout(null);
         panel.setBounds(50,120,1000,500);
         panel.setOpaque(true);
-        panel.setBackground(Color.gray);
-        
-        
 		
 		JLabel timeLabel = new JLabel("Set time");
 		timeLabel.setBounds(90,30,500,50);
@@ -116,7 +113,7 @@ public class ParametresConfigurationPage extends JFrame{
         wordText.setFont(new Font ("ARIAL", Font.PLAIN, 24));
         panel.add(wordText);
         
-        ImageIcon addIcon = new ImageIcon("add.png");
+        ImageIcon addIcon = new ImageIcon("img/add.png");
 		addIcon.setImage(addIcon.getImage().getScaledInstance(27, 27, 27));
 		
         JButton addButton =new JButton("Add word to list");
@@ -125,7 +122,7 @@ public class ParametresConfigurationPage extends JFrame{
         addButton.setFont(new Font ("ARIAL", Font.PLAIN, 22));
         panel.add(addButton);
         
-        ImageIcon editIcon = new ImageIcon("edit.png");
+        ImageIcon editIcon = new ImageIcon("img/edit.png");
 //        System.out.println("image!!!!!!!!!!!!!!!"+editIcon);
 		editIcon.setImage(editIcon.getImage().getScaledInstance(22, 22, 22));
 		
@@ -135,7 +132,7 @@ public class ParametresConfigurationPage extends JFrame{
         editButton.setFont(new Font ("ARIAL", Font.PLAIN, 22));
         panel.add(editButton);
         
-        ImageIcon deleteIcon = new ImageIcon("delete.png");
+        ImageIcon deleteIcon = new ImageIcon("img/delete.png");
 		deleteIcon.setImage(deleteIcon.getImage().getScaledInstance(23, 23, 23));
 		
         JButton deleteRowButton =new JButton("Delete Row Selected");
@@ -165,7 +162,7 @@ public class ParametresConfigurationPage extends JFrame{
         wordTable.setFont(font);
         wordTable.setRowHeight(30); 
         
-        ImageIcon startIcon = new ImageIcon("start.png");
+        ImageIcon startIcon = new ImageIcon("img/start.png");
 		startIcon.setImage(startIcon.getImage().getScaledInstance(25, 25, 25));
         
         JButton startButton =new JButton("Start");
@@ -247,10 +244,7 @@ public class ParametresConfigurationPage extends JFrame{
 				getSeconde(timeText);
 				setWordList();
 				setSeconds();
-				ParametresConfigurationPage.this.session.setParameters(clientLocal, profil, wordList, seconds);
-				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);			
-				ParametresConfigurationPage.this.dispose();
-				
+				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
 			}
 		});
         
