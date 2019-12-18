@@ -70,16 +70,16 @@ public class ParametresConfigurationPage extends JFrame{
 		SessionBottomBar bottomBar = new SessionBottomBar(session);
 		getContentPane().add(bottomBar, BorderLayout.SOUTH);
 		
-		JButton launchSessionButton = new JButton("Launch the playing session.");
-		launchSessionButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
-				
-			}
-		});
-		getContentPane().add(launchSessionButton,BorderLayout.EAST);
+//		JButton launchSessionButton = new JButton("Launch the playing session.");
+//		launchSessionButton.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);
+//				
+//			}
+//		});
+//		getContentPane().add(launchSessionButton,BorderLayout.EAST);
 
 		
 		JPanel panel = new JPanel();
@@ -248,7 +248,7 @@ public class ParametresConfigurationPage extends JFrame{
 				setWordList();
 				setSeconds();
 				ParametresConfigurationPage.this.session.setParameters(clientLocal, profil, wordList, seconds);
-				ParametresConfigurationPage.this.session.launchEditeur(clientLocal, profil);			
+				ParametresConfigurationPage.this.session.launchEditeurs(clientLocal, profil);			
 				ParametresConfigurationPage.this.dispose();
 				
 			}
